@@ -1,13 +1,26 @@
 jQuery(document).ready(function(){ 
 	var url_atual = window.location;
 	if(url_atual.search == "?page=w4travel"){
-		jQuery("h2").attr("style", "margin-bottom: 0");
+		jQuery("h2").attr("style", "margin: 0");
 		jQuery(".form-table th").attr("style", "padding: 0;width: 300px;font-weight: 400;position: absolute;margin-left: 26px;margin-top:6px;height: 30px;");
 		jQuery(".form-table td").attr("style", "padding: 0;position: relative;");
 
 		jQuery(".classe-html-tr").attr("style", "height:30px"); 
 
 		jQuery(".submit").attr("style", "position:absolute;z-index:9999");
+
+	  	if(jQuery("#licenseIugu").val() == "0"){
+	  		jQuery(".classe-html-tr").remove();
+	  		jQuery("h3").remove();
+	  		jQuery(".afiliadoBooking").remove();
+	  		jQuery(".form-table").attr("style", "margin: 0");
+	  		jQuery("#importData").remove();
+
+	  		jQuery(".button").attr("onclick", "checkLicenseIugu()");
+	  	}else{
+	  		jQuery("h4").remove();
+	  		jQuery(".textLicense").remove();
+	  	}
 	}
 });
 
@@ -99,6 +112,68 @@ function changeValueAfiliadoViatorPasseios(){
 	jQuery("#valueAfiliadoViatorPasseios").val(valueAfiliadoViatorPasseios);
 }
 
+function checkLicenseIugu(){
+	var eventhandler = function(e) {
+   		e.preventDefault();      
+	} 
+	jQuery("form").bind('submit', eventhandler);
+
+	var license = jQuery("#setValueLicense").val();
+
+    if(license == "" || license.length < 10){
+
+    	swal({
+            title: "Licença inválida.",
+	        text: 'Por favor, preencha o campo com o valor da sua licença.',
+            icon: "warning",
+        }); 
+
+	}else{
+
+	    swal({
+	        title: "Verificando licença...",
+	        text: 'Por favor, aguarde. A página será recarregada assim que a verificarmos a sua licença.',
+	        buttons: false,
+	        closeOnClickOutside: false, 
+	        icon: "success",
+	    }); 
+
+		var license = jQuery("#setValueLicense").val();
+		var urlOrigin = window.location.origin; //com https
+		var urlHost = window.location.host //sem https
+		jQuery.ajax({
+	        type: "POST",
+	        url: wp_ajax.ajaxurl,
+	        data: { license:license, urlOrigin:urlOrigin, urlHost:urlHost, action: "checkLicenseIugu" },
+	        success: function( data ) {
+	        	var retorno = data.slice(0,-1);
+				var resposta = JSON.parse(retorno); 
+	            if(resposta["status"] == 0 || resposta["status"] == 2){ 
+	            	swal({
+	                	title: "Erro ao validar licença",
+	                  	text: resposta["message"],
+	                  	icon: "error" 
+	                }).then((value) => {
+                        window.location.reload();
+                    });
+	            }else{ 
+	            	swal({
+	                	title: "Sucesso!",
+	                  	text: resposta["message"],
+	                  	icon: "success" 
+	                }).then((value) => {
+	                	swal.close();  
+
+	                	jQuery(".button").removeAttr("onclick");  
+			          	jQuery("form").unbind('submit', eventhandler);
+			          	jQuery(".button").click(); 
+	        		});
+	            }
+	        }
+	    });
+
+	} 
+}
 
 function importContentTours(){
 	jQuery("#importData").attr("disabled", "disabled");

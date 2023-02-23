@@ -84,6 +84,16 @@
     function minhas_configuracoes() {
         register_setting(
             'grupo_minhas_configuracoes',
+            'setValueLicense',
+            array(
+                'sanitize_callback' => function( $value ) {
+                    return $value;
+                },
+            )
+        );
+
+        register_setting(
+            'grupo_minhas_configuracoes',
             'valueCheckGetContent',
             array(
                 'sanitize_callback' => function( $value ) {
@@ -165,8 +175,17 @@
         );
      
         add_settings_section(
+            'licenciador',
+            '<h4 style="color: #1d2327;font-size: 1.3em;margin: 1em 0 0 0;">Validar licença</h4>', 
+            function( $args ) {
+                echo '';
+            },
+            'grupo_minhas_configuracoes'
+        );
+     
+        add_settings_section(
             'gerador_de_conteudo',
-            'Gerador de Conteúdo', 
+            '<h3 class="classe-html-h">Gerador de Conteúdo</h3>', 
             function( $args ) {
                 echo '';
             },
@@ -175,11 +194,32 @@
      
         add_settings_section(
             'programa_de_afiliados',
-            '<br> Programa de Afiliados', 
+            '<h3 class="classe-html-h">Programa de Afiliados</h3>', 
             function( $args ) {
                 echo '';
             },
             'grupo_minhas_configuracoes'
+        );
+     
+        add_settings_field(
+            'setValueLicense',
+            '',
+            function( $args ) { 
+                $options = get_option( 'setValueLicense' ); 
+                ?> 
+                    <div class="textLicense" style="margin: 8px auto;">
+                        <label>Informe o número da sua licença IUGU:</label><br>
+                        <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="setValueLicense" value="<?php echo get_option( 'setValueLicense' ); ?>" style="width:30%;margin-top: 6px" autocomplete="off">
+                    </div>
+                    <input type="hidden" name="setValueLicense" id="licenseIugu" value="<?= (empty(get_option( 'setValueLicense' )) ? 0 : get_option( 'setValueLicense' )); ?>">
+                <?php
+            },
+            'grupo_minhas_configuracoes',
+            'licenciador',
+            [
+                'label_for' => 'setValueLicense',
+                'class'     => '',
+            ]
         );
      
         add_settings_field(

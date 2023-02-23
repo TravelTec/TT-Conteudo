@@ -118,6 +118,8 @@
 					$setTagPost = $resposta["tags_posts"];
 					for($i=0; $i<count($posts); $i++){  
 
+						$posts[$i]["post_content"] = str_replace('https://redeturistica.com.br/formulario-de-cotacao/', 'https://'.$_SERVER["HTTP_HOST"].'/formulario-de-cotacao/', $posts[$i]["post_content"]);
+
 						if(!empty(trim(get_option( 'setValueAfiliadoBooking' )))){
 							$posts[$i]["post_content"] = str_replace("aid={IdAfBooking}", "aid=".get_option('setValueAfiliadoBooking'), $posts[$i]["post_content"]);
 						}
