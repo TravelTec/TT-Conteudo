@@ -4,8 +4,8 @@
 
 /*
 	Plugin Name: Voucher Tec - Wordpress Travel
-	Plugin URI: https://github.com/TravelTec/w4travel
-	GitHub Plugin URI: https://github.com/TravelTec/w4travel
+	Plugin URI: https://traveltec.com.br
+	GitHub Plugin URI: https://traveltec.com.br
 	Description: Voucher Tec - Wordpress Travel transforma o Wordpress em uma plataforma especializada em atendimento para viagens, permitindo a geração de conteúdo, cotação de viagens para o cliente e um monetizador automático, fazendo seu site vender seus serviços e aproveitar a audiência.
 	Version: 1.1.1
 	Author: Travel Tec
