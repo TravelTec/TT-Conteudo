@@ -2,7 +2,7 @@
 
     defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-    function categories_list($atts){
+    function categories_list_w4travel($atts){
         
         $retorno = "";
 
@@ -156,6 +156,6 @@
         return $retorno;
     }
 
-    add_shortcode('VOUCHERTEC_FORMULARIO_COTACAO', 'categories_list');
+    add_shortcode('VOUCHERTEC_FORMULARIO_COTACAO', 'categories_list_w4travel');
 
 ?>

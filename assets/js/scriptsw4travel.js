@@ -1,26 +1,59 @@
 jQuery(document).ready(function(){ 
 	var url_atual = window.location;
 	if(url_atual.search == "?page=w4travel"){
+
+		/* estilização conteúdo */
+		jQuery(".elementor-shape").hide();
+		jQuery(".elementor-6664").addClass('row');
+		jQuery(".elementor-6664 section").addClass('col-lg-6');
+		jQuery(".elementor-element-4251364").removeClass('col-lg-6');
+		jQuery(".elementor-element-4251364").addClass('col-lg-12');
+
+		jQuery(".elementor-element-12d0367 h2").attr("style", "font-size:16px; margin-bottom: 10px");
+		jQuery("figure img").attr("style", "width: 180px;height: 150px;");
+		/* fim estilização conteúdo */
+
 		jQuery("h2").attr("style", "margin: 0");
 		jQuery(".form-table th").attr("style", "padding: 0;width: 300px;font-weight: 400;position: absolute;margin-left: 26px;margin-top:6px;height: 30px;");
+		jQuery("#tab-news .form-table th").attr("style", "padding: 0;width: 96%;font-weight: 400;position: absolute;margin-left: 26px;height: 30px;");
+		jQuery("#tab-info .form-table th").attr("style", "padding: 0;width: 96%;font-weight: 400;position: absolute;margin-left: 26px;height: 30px;");
 		jQuery(".form-table td").attr("style", "padding: 0;position: relative;");
 
 		jQuery(".classe-html-tr").attr("style", "height:30px"); 
 
 		jQuery(".submit").attr("style", "position:absolute;z-index:9999");
 
-	  	if(jQuery("#licenseIugu").val() == "0"){
-	  		jQuery(".classe-html-tr").remove();
-	  		jQuery("h3").remove();
-	  		jQuery(".afiliadoBooking").remove();
-	  		jQuery(".form-table").attr("style", "margin: 0");
-	  		jQuery("#importData").remove();
+		jQuery("#tab-config form").attr("id", "FORMLICENCA");
 
-	  		jQuery(".button").attr("onclick", "checkLicenseIugu()");
-	  	}else{
-	  		jQuery("h4").remove();
-	  		jQuery(".textLicense").remove();
-	  	}
+		jQuery("#setNumeroWhatsapp").mask("(99) 99999-9999");
+
+	  	// if(jQuery("#licenseIugu").val() == "0"){
+	  	// 	// jQuery(".classe-html-tr").remove();
+	  	// 	// jQuery("h3").remove();
+	  	// 	// jQuery(".afiliadoBooking").remove();
+	  	// 	// jQuery(".form-table").attr("style", "margin: 0");
+	  	// 	// jQuery("#importData").remove();
+
+	  	// 	// jQuery(".button").attr("onclick", "checkLicenseIugu()");
+	  	// 	jQuery("h4").remove();
+	  	// 	jQuery(".textLicense").remove();
+	  	// }else{
+	  	// 	jQuery("h4").remove();
+	  	// 	jQuery(".textLicense").remove();
+	  	// }
+
+	  	jQuery('#tabs .tab-content').hide();
+		jQuery('#tabs .tab-content:first').show();
+		jQuery('.nav-tab-wrapper a:first').addClass('nav-tab-active');
+
+		jQuery(".nav-tab-wrapper").on("click", ".nav-tab", function(e) {
+  			e.preventDefault();
+
+  			jQuery(".nav-tab").removeClass("nav-tab-active");
+  			jQuery(".tab-content").hide();
+  			jQuery(this).addClass("nav-tab-active");
+  			jQuery(jQuery(this).attr("href")).show();
+		});
 	}
 });
 
@@ -116,7 +149,7 @@ function checkLicenseIugu(){
 	var eventhandler = function(e) {
    		e.preventDefault();      
 	} 
-	jQuery("form").bind('submit', eventhandler);
+	jQuery("#FORMLICENCA").bind('submit', eventhandler);
 
 	var license = jQuery("#setValueLicense").val();
 
@@ -132,7 +165,7 @@ function checkLicenseIugu(){
 
 	    swal({
 	        title: "Verificando licença...",
-	        text: 'Por favor, aguarde. A página será recarregada assim que a verificarmos a sua licença.',
+	        text: 'Por favor, aguarde.',
 	        buttons: false,
 	        closeOnClickOutside: false, 
 	        icon: "success",
@@ -147,26 +180,24 @@ function checkLicenseIugu(){
 	        data: { license:license, urlOrigin:urlOrigin, urlHost:urlHost, action: "checkLicenseIugu" },
 	        success: function( data ) {
 	        	var retorno = data.slice(0,-1);
-				var resposta = JSON.parse(retorno); 
-	            if(resposta["status"] == 0 || resposta["status"] == 2){ 
+				var resposta = JSON.parse(retorno);  
+
+			    if(resposta["status"] == 0 || resposta["status"] == 2){ 
 	            	swal({
 	                	title: "Erro ao validar licença",
 	                  	text: resposta["message"],
 	                  	icon: "error" 
 	                }).then((value) => {
-                        window.location.reload();
-                    });
+	                	swal.close();
+	                	jQuery("#setValueLicense").val('');
+	        		});
 	            }else{ 
 	            	swal({
 	                	title: "Sucesso!",
-	                  	text: resposta["message"],
+	                  	text: "Licença validada com sucesso. Aguarde, o conteúdo diário já será importado.",
 	                  	icon: "success" 
 	                }).then((value) => {
-	                	swal.close();  
-
-	                	jQuery(".button").removeAttr("onclick");  
-			          	jQuery("form").unbind('submit', eventhandler);
-			          	jQuery(".button").click(); 
+	                	importContentDaily();
 	        		});
 	            }
 	        }
@@ -175,19 +206,19 @@ function checkLicenseIugu(){
 	} 
 }
 
-function importContentTours(){
+function importContentDaily(){
 	jQuery("#importData").attr("disabled", "disabled");
     jQuery("#importData").prop("disabled", true);
-	jQuery("#importData").html('<img src="https://media.tenor.com/images/a742721ea2075bc3956a2ff62c9bfeef/tenor.gif" style="height:10px;margin-right:3px;"> Importando... Aguarde.');
+	jQuery("#importData").html('<img src="https://media.tenor.com/images/a742721ea2075bc3956a2ff62c9bfeef/tenor.gif" style="height:10px;margin-right:3px;"> Importando conteúdo diário... Aguarde.');
 
 	jQuery.ajax({
         type: "POST",
         url: wp_ajax.ajaxurl,
-        data: { action: "import_content" },
+        data: { action: "import_content_daily" },
         success: function( data ) {
         	var retorno = data.slice(0,-1);
 			var resposta = JSON.parse(retorno);
-            if(retorno["status"] == 1){
+            if(retorno["status"] == 0){
             	jQuery("#importData").html('Importar todo o conteúdo');
             	jQuery("#importData").removeAttr("disabled");
             	swal({
@@ -207,4 +238,56 @@ function importContentTours(){
             }
         }
     });
+}
+
+function importContentTours(){
+	jQuery("#importData").attr("disabled", "disabled");
+    jQuery("#importData").prop("disabled", true);
+	jQuery("#importData").html('<img src="https://media.tenor.com/images/a742721ea2075bc3956a2ff62c9bfeef/tenor.gif" style="height:10px;margin-right:3px;"> Importando... Aguarde.');
+
+	var license = jQuery("#setValueLicense").val();
+
+	if(license == ""){
+    	jQuery("#importData").html('Importar todo o conteúdo');
+    	jQuery("#importData").removeAttr("disabled");
+	            	
+		swal({
+        	title: "Erro ao importar",
+          	text: "É necessário ter uma licença ativa e válida para fazer a importação do conteúdo.",
+          	icon: "error" 
+        }).then((value) => {
+        	swal.close();
+        	jQuery("#setValueLicense").focus();
+		});
+	}else{ 
+
+		jQuery.ajax({
+	        type: "POST",
+	        url: wp_ajax.ajaxurl,
+	        data: { action: "import_content" },
+	        success: function( data ) {
+	        	var retorno = data.slice(0,-1);
+				var resposta = JSON.parse(retorno);
+	            if(retorno["status"] == 0){
+	            	jQuery("#importData").html('Importar todo o conteúdo');
+	            	jQuery("#importData").removeAttr("disabled");
+	            	swal({
+	                	title: "Erro ao importar.",
+	                  	text: "Não foi possível cadastrar os posts. Tente novamente.",
+	                  	icon: "error" 
+	                });
+	            }else{
+	            	jQuery("#importData").html('Conteúdo importado!');
+	            	swal({
+	                	title: "Sucesso!",
+	                  	text: "Conteúdo importado com sucesso. Aproveite!",
+	                  	icon: "success" 
+	                }).then((value) => {
+	            		window.location.reload();
+	        		});
+	            }
+	        }
+	    });
+
+	}
 }
