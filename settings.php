@@ -812,44 +812,29 @@
                         <p style="font-size:17px;line-height: 1.8"> O Plugin <strong>Travel Tec - CONTEÚDO TURÍSTICO</strong> foi desenvolvido para resolver o problema das agências de viagens em manter um conteúdo relevante para seus clientes e principalmente atrair novos clientes. </p>
 
                         <?php 
-
+                            setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
+date_default_timezone_set('America/Sao_Paulo');
                             function sortFunction( $a, $b ) {
                                 return $a["date"] > $b["date"];
                             }  
+ 
+
+                                $server = '162.240.67.31';
+                            $user = 'blogtraveltec_wp';
+                            $database = 'blogtraveltec_wp';
+                            $pass = '%T^ka^1ERWix'; 
+
+                            $connBlog = conectar_mysql_wp($server, $user, $pass, $database);  
+
+                                                                        $data_inicio = date("2023-04-03 00:00:00");
+                                                                        $data_final = date("2023-04-09 00:00:00");
 
 
-                            setlocale(LC_TIME, 'pt_BR', 'pt_BR.utf-8', 'pt_BR.utf-8', 'portuguese');
-                            date_default_timezone_set('America/Sao_Paulo');
-
-                            $curl = curl_init();
-
-                            curl_setopt_array($curl, array(
-                                CURLOPT_URL => "https://blog.traveltec.com.br/wp-json/wp/v2/posts",
-                                CURLOPT_RETURNTRANSFER => true,
-                                CURLOPT_ENCODING => "",
-                                CURLOPT_MAXREDIRS => 10,
-                                CURLOPT_TIMEOUT => 90,
-                                CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-                                CURLOPT_CUSTOMREQUEST => "GET",
-                                CURLOPT_HTTPHEADER => array(
-                                    "cache-control: no-cache"
-                                ),
-                            ));
-
-                            $response = curl_exec($curl);
-                            $err = curl_error($curl);
-
-                            curl_close($curl);
-
-                            if ($err) {
-                                echo "Não foi possível consultar a programação semanal.";
-                            } else {
-
-                                $resposta = json_decode($response, true);  
-                                usort($resposta, "sortFunction"); 
-
-                            } 
-
+                            $dateAfter = date("Y-m-d 00:00:00");
+                            $dateBefore = date("Y-m-d 23:59:59");
+                            $sqlPosts = $connBlog->prepare("SELECT ID, post_date, post_title, post_excerpt FROM `wp_posts` where post_date >= '".$data_inicio."' and post_date <= '".$data_final."'");
+                            $sqlPosts->execute(); 
+                            $retornoPosts = $sqlPosts->fetchAll(\PDO::FETCH_ASSOC);  
                         ?>
 
                         <!-- Latest compiled and minified CSS -->
@@ -903,23 +888,15 @@
                             <div class="row">
                                 <div class="col-lg-9" style="border-right: 1px solid #ddd;padding-left: 0">
                                     <div class="row">
-                                        <?php for($i=0; $i<count($resposta); $i++){ ?>
-                                            <?php 
+                                        <?php for($i=0; $i<count($retornoPosts); $i++){ ?>
+                                            <?php   
+                                                    $postId = $retornoPosts[$i]["ID"];
 
-                                                    $data_inicio = date("2023-04-03");
-                                                    $data_final = date("2023-04-09");
+                                                    $sqlPostThumbnail = $connBlog->prepare("SELECT * FROM `wp_postmeta` WHERE meta_key = '_thumbnail_id' AND post_id = ".$postId);
+                                                    $sqlPostThumbnail->execute(); 
+                                                    $retornoPostThumbnail = $sqlPostThumbnail->fetch(\PDO::FETCH_ASSOC);  
 
-                                                    $data_post = date("Y-m-d", strtotime($resposta[$i]["date"])); //from database
-
-                                                    $data_inicio_time = strtotime($data_inicio);
-                                                    $data_final_time = strtotime($data_final);
-
-                                                    $data_post_time = strtotime($data_post); 
-
-                                                     if($data_post_time >= "1680490800" && $data_post_time <= "1681009200"){ ?>
-                                                <?php
-
-                                                    $id_featured_image = $resposta[$i]["featured_media"];
+                                                    $id_featured_image = $retornoPostThumbnail["meta_value"]; 
 
                                                     $curl2 = curl_init();
 
@@ -956,21 +933,20 @@
 
                                                 ?>
                                                     <div class="col-lg-6" style="margin-bottom: 13px;border-bottom: 1px solid #ddd;padding-bottom: 12px;">
-                                                        <h5 style="text-transform: capitalize"><?=utf8_encode(strftime('%A: %d/%m', strtotime($resposta[$i]["date"])));?></h5>
-                                                        <h5><?=$resposta[$i]["title"]["rendered"]?></h5>
+                                                        <h5 style="text-transform: capitalize"><?=utf8_encode(strftime('%A: %d/%m', strtotime($retornoPosts[$i]["post_date"])));?></h5>
+                                                        <h5><?=$retornoPosts[$i]["post_title"]?></h5>
                                                         <div class="row">
                                                             <div class="col-lg-6">
                                                                 <img src="<?=(empty($post_featured_image) ? plugin_dir_url( __FILE__ ).'assets/img/no-image.png' : $post_featured_image)?>" style="width:100%;height:150px">
                                                             </div>
                                                             <div class="col-lg-6 excerpt" style="padding-left: 5px">
-                                                                <?=mb_substr($resposta[$i]["excerpt"]["rendered"], 0, 195)?> [...]
+                                                                <?=mb_substr($retornoPosts[$i]["post_excerpt"], 0, 195)?> [...]
                                                                 <br>
                                                                 <span style="font-size:12px"><strong>Categoria: </strong>Turismo Sol e Praia</span>
                                                             </div>
                                                         </div>
                                                     </div>  
-                                            <?php } ?>
-                                        <?php } ?>
+                                            <?php } ?> 
                                     </div>
                                 </div>
                                 <div class="col-lg-3" style="">
