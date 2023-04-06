@@ -186,7 +186,7 @@
 
 		}    
 		
-	    	if(empty(get_option( 'setValueLicense' )){
+	    	if(empty(get_option( 'setValueLicense' ))){
 				echo json_encode(array("status" => 0, "message" => "Antes de iniciar as importações, valide sua licença na aba Configurações."));
 		}else if(empty($getCategories)){
 				echo json_encode(array("status" => 0, "message" => "Antes de iniciar as importações, selecione o tipo de conteúdo que deseja."));
