@@ -2,6 +2,8 @@
 
 	defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+	add_action( 'wp_ajax_add_categoria', 'add_categoria' );
+    	add_action( 'wp_ajax_nopriv_add_categoria', 'add_categoria' );
 	function add_categoria(){
 
     	$meta_name = $_POST['meta_name'];
