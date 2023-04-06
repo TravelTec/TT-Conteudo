@@ -28,7 +28,7 @@
 
 		}else{ 
 
-			$setMetaCategory = $connSite->prepare("UPDATE wp_options SET option_value = ".$meta_value." WHERE option_name = '".$meta_name."'"); 
+			$setMetaCategory = $connSite->prepare("UPDATE wp_options SET option_value = '' WHERE option_name = '".$meta_name."'"); 
 			$setMetaCategory->execute(); 
 
 		}
