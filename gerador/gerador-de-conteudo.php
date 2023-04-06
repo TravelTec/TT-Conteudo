@@ -1061,298 +1061,6 @@
 
 
 
-    	//require_once("importar-conteudo.php");
-
-
-
-    	global $wpdb; 
-
-
-
-		$getUser = $wpdb->get_results( "SELECT * FROM wp_users WHERE user_login = 'master_rede'");
-
-		if(empty($getUser) || $getUser == null || $getUser == "null"){
-
-			$insertUser = $wpdb->insert('wp_users', array(
-
-			    'user_login' => 'master_rede',
-
-			    'user_pass' => MD5('4v,-f9!oo9!Q'),
-
-			    'user_nicename' => 'master_rede',
-
-			    'user_email' => 'sac@traveltec.com.br',
-
-			    'user_url' => 'https://redeturistica.com.br',
-
-			    'user_registered' => date('Y-m-d H:i:s'),
-
-			    'user_status' => 0,
-
-			    'display_name' => 'Rede Turística'
-
-			));
-
-			$getUser = $wpdb->get_results( "SELECT * FROM wp_users WHERE user_login = 'master_rede'"); 
-
-		}
-
-
-
-		$getUser = $wpdb->get_results( "SELECT * FROM wp_users WHERE user_login = 'master_rede'");
-
-		$author = $getUser[0]->ID;
-
-		
-
-		/**********************************************************************************************/  
-
-
-
-		$server = '162.240.67.31';
-
-        $user = 'blogtraveltec_wp';
-
-        $database = 'blogtraveltec_wp';
-
-        $pass = '%T^ka^1ERWix'; 
-
-
-
-        $connBlog = conectar_mysql_wp($server, $user, $pass, $database);  
-
-
-
-        $dateAfter = date("2023-01-01 00:00:00");
-
-        $dateBefore = date("Y-m-d 23:59:59");
-
-		$sqlPosts = $connBlog->prepare("SELECT ID, post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, post_name, post_modified, post_modified_gmt, post_type FROM `wp_posts` where post_status = 'publish'");
-
-	    $sqlPosts->execute(); 
-
-		$retornoPosts = $sqlPosts->fetchAll(\PDO::FETCH_ASSOC);   
-
-
-
-	    $resposta = [];
-
-
-
-	    for($i=0; $i<count($retornoPosts); $i++){
-
-
-
-			$resposta["posts"][] = '('.$retornoPosts[$i]["post_author"].', \''.$retornoPosts[$i]["post_date"].'\', \''.$retornoPosts[$i]["post_date_gmt"].'\', \''.$retornoPosts[$i]["post_content"].'\', \''.$retornoPosts[$i]["post_title"].'\', \''.$retornoPosts[$i]["post_excerpt"].'\', \''.$retornoPosts[$i]["post_status"].'\', \''.$retornoPosts[$i]["post_name"].'\', \''.$retornoPosts[$i]["post_modified"].'\', \''.$retornoPosts[$i]["post_modified_gmt"].'\', \''.$retornoPosts[$i]["post_type"].'\')';
-
-			$resposta["posts_array"][] = array("ID" => $retornoPosts[$i]["ID"], "post_author" => $retornoPosts[$i]["post_author"], "post_date" => $retornoPosts[$i]["post_date"], "post_date_gmt" => $retornoPosts[$i]["post_date_gmt"], "post_content" => $retornoPosts[$i]["post_content"], "post_title" => $retornoPosts[$i]["post_title"], "post_excerpt" => $retornoPosts[$i]["post_excerpt"], "post_status" => $retornoPosts[$i]["post_status"], "post_name" => $retornoPosts[$i]["post_name"], "post_modified" => $retornoPosts[$i]["post_modified"], "post_modified_gmt" => $retornoPosts[$i]["post_modified_gmt"], "post_type" => $retornoPosts[$i]["post_type"]); 
-
-
-
-		}
-
-
-
-		/**** *****/ 
-
-
-
-		for($i=0; $i<count($retornoPosts); $i++){ 
-
-
-
-			$postId = $retornoPosts[$i]["ID"];
-
-			$post_id[] = $retornoPosts[$i]["ID"]; 
-
-
-
-			$sqlPostMeta = $connBlog->prepare("SELECT * FROM `wp_postmeta` WHERE meta_key LIKE '%rank%' AND post_id = ".$postId);
-
-		    $sqlPostMeta->execute(); 
-
-			$retornoPostMeta = $sqlPostMeta->fetchAll(\PDO::FETCH_ASSOC);  
-
-
-
-			for ($x=0; $x<count($retornoPostMeta); $x++) {
-
-				$resposta["rank_meta"][$postId][] = array($retornoPostMeta[$x]["meta_key"], $retornoPostMeta[$x]["meta_value"]);
-
-			} 
-
-
-
-			$sqlPostThumbnail = $connBlog->prepare("SELECT meta_value FROM `wp_postmeta` WHERE meta_key = '_thumbnail_id' AND post_id = ".$postId);
-
-		    $sqlPostThumbnail->execute(); 
-
-			$retornoPostThumbnail = $sqlPostThumbnail->fetch(\PDO::FETCH_ASSOC);  
-
-
-
-			$id_featured_image = $retornoPostThumbnail["meta_value"]; 
-
-
-
-			$sqlFeaturedMedia = $connBlog->prepare("SELECT guid FROM `wp_posts` WHERE ID = ".$id_featured_image);
-
-		    $sqlFeaturedMedia->execute(); 
-
-			$retornoFeaturedMedia = $sqlFeaturedMedia->fetch(\PDO::FETCH_ASSOC);  
-
-
-
-			$resposta["featured_image_posts"][] = $retornoFeaturedMedia["guid"];
-
-
-
-			$sqlPostCategory = $connBlog->prepare("SELECT a.term_taxonomy_id, b.taxonomy FROM wp_term_relationships a
-
-													INNER JOIN wp_term_taxonomy b ON a.term_taxonomy_id = b.term_taxonomy_id
-
-													WHERE b.taxonomy = 'category' 
-
-													AND a.object_id = ".$postId);
-
-		    $sqlPostCategory->execute(); 
-
-			$retornoPostCategory = $sqlPostCategory->fetchAll(\PDO::FETCH_ASSOC); 
-
-
-
-			for($z=0; $z<count($retornoPostCategory); $z++){
-
-				$resposta["categories_posts"][$postId][] = intval($retornoPostCategory[$z]["term_taxonomy_id"]); 
-
-			}
-
-
-
-			$sqlPostTag = $connBlog->prepare("SELECT b.term_taxonomy_id, b.taxonomy, c.slug FROM wp_term_relationships a
-
-												INNER JOIN wp_term_taxonomy b ON a.term_taxonomy_id = b.term_taxonomy_id
-
-												INNER JOIN wp_terms c ON c.term_id = b.term_id
-
-												WHERE b.taxonomy = 'post_tag' 
-
-												AND a.object_id = ".$postId);
-
-		    $sqlPostTag->execute(); 
-
-			$retornoPostTag = $sqlPostTag->fetchAll(\PDO::FETCH_ASSOC); 
-
-
-
-			for($y=0; $y<count($retornoPostTag); $y++){
-
-				$resposta["tags_posts"][$postId][] = array(intval($retornoPostTag[$y]["term_taxonomy_id"]), $retornoPostTag[$y]["slug"]); 
-
-			}
-
-
-
-		} 
-
-
-
-		/**** *****/ 
-
-
-
-		$resposta["categories"] = getCategories();
-
-		$resposta["tags"] = getTags();
-
-
-
-		/**************************************************************************************************************/
-
-
-
-		$server = '162.240.67.31';
-
-        $user = DB_USER;
-
-        $database = DB_NAME;
-
-        $pass = DB_PASSWORD;
-
-
-
-        $connSite = conectar_mysql_wp($server, $user, $pass, $database);  
-
-
-
-		function rudr_upload_file_by_url( $image_url ) {
-
-
-
-			// it allows us to use download_url() and wp_handle_sideload() functions
-
-			require_once( ABSPATH . 'wp-admin/includes/file.php' );
-
-
-
-			// download to temp dir
-
-			$temp_file = download_url( $image_url );
-
-
-
-			if( is_wp_error( $temp_file ) ) {
-
-				return false;
-
-			}
-
-
-
-			// move the temp file into the uploads directory
-
-			$file = array(
-
-				'name'     => basename( $image_url ),
-
-				'type'     => mime_content_type( $temp_file ),
-
-				'tmp_name' => $temp_file,
-
-				'size'     => filesize( $temp_file ),
-
-			);
-
-			$sideload = wp_handle_sideload(
-
-				$file,
-
-				array(
-
-					'test_form'   => false // no needs to check 'action' parameter
-
-				)
-
-			);
-
-
-
-			if( ! empty( $sideload[ 'error' ] ) ) {
-
-				// you may return error message if you want
-
-				return false;
-
-			} 
-
-
-
-			return $sideload;
-
-
-
-		}
-
 
 
 		$getCategories = [];
@@ -1501,480 +1209,774 @@
 
 		}    
 
+		if(empty($getCategories)){
+				echo json_encode(array("status" => 0, "message" => "Você precisa selecionar ao menos uma categoria de turismo."));
+		}else{ 
 
 
-		/* CATEGORIAS */
-
-
-
-			if(!empty($resposta["categories"]) || !is_null($resposta["categories"])){
-
-				$categories = $resposta["categories"];
-
-				for($i=0; $i<count($categories); $i++){  
-
-					if(in_array($categories[$i]["id"], $getCategories)){
-
-						$categoryTitle = $categories[$i]["name"];
-
-						$categorySlug = $categories[$i]["slug"];
-
-						
-
-						$deleteCategoryIdExistente .= $categories[$i]["id"].',';  
-
-						$deleteCategorySlug .= '"'.$categories[$i]["slug"].'" ,'; 
+	    	global $wpdb; 
 
 
 
-						$insertTags .= '('.$categories[$i]["id"].', "'.$categories[$i]["name"].'", "'.$categories[$i]["slug"].'", '.$categories[$i]["term_group"].'), '; 
+			$getUser = $wpdb->get_results( "SELECT * FROM wp_users WHERE user_login = 'master_rede'");
+
+			if(empty($getUser) || $getUser == null || $getUser == "null"){
+
+				$insertUser = $wpdb->insert('wp_users', array(
+
+				    'user_login' => 'master_rede',
+
+				    'user_pass' => MD5('4v,-f9!oo9!Q'),
+
+				    'user_nicename' => 'master_rede',
+
+				    'user_email' => 'sac@traveltec.com.br',
+
+				    'user_url' => 'https://redeturistica.com.br',
+
+				    'user_registered' => date('Y-m-d H:i:s'),
+
+				    'user_status' => 0,
+
+				    'display_name' => 'Rede Turística'
+
+				));
+
+				$getUser = $wpdb->get_results( "SELECT * FROM wp_users WHERE user_login = 'master_rede'"); 
+
+			}
 
 
 
-						$insertTagTaxonomy .= '('.$categories[$i]["id"].', "category", "", 0, '.$categories[$i]["count"].'), ';
+			$getUser = $wpdb->get_results( "SELECT * FROM wp_users WHERE user_login = 'master_rede'");
 
-					}
+			$author = $getUser[0]->ID;
+
+			
+
+			/**********************************************************************************************/  
+
+
+
+			$server = '162.240.67.31';
+
+	        $user = 'blogtraveltec_wp';
+
+	        $database = 'blogtraveltec_wp';
+
+	        $pass = '%T^ka^1ERWix'; 
+
+
+
+	        $connBlog = conectar_mysql_wp($server, $user, $pass, $database);  
+
+
+
+	        $dateAfter = date("2023-01-01 00:00:00");
+
+	        $dateBefore = date("Y-m-d 23:59:59");
+
+			$sqlPosts = $connBlog->prepare("SELECT ID, post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, post_name, post_modified, post_modified_gmt, post_type FROM `wp_posts` where post_status = 'publish'");
+
+		    $sqlPosts->execute(); 
+
+			$retornoPosts = $sqlPosts->fetchAll(\PDO::FETCH_ASSOC);   
+
+
+
+		    $resposta = [];
+
+
+
+		    for($i=0; $i<count($retornoPosts); $i++){
+
+
+
+				$resposta["posts"][] = '('.$retornoPosts[$i]["post_author"].', \''.$retornoPosts[$i]["post_date"].'\', \''.$retornoPosts[$i]["post_date_gmt"].'\', \''.$retornoPosts[$i]["post_content"].'\', \''.$retornoPosts[$i]["post_title"].'\', \''.$retornoPosts[$i]["post_excerpt"].'\', \''.$retornoPosts[$i]["post_status"].'\', \''.$retornoPosts[$i]["post_name"].'\', \''.$retornoPosts[$i]["post_modified"].'\', \''.$retornoPosts[$i]["post_modified_gmt"].'\', \''.$retornoPosts[$i]["post_type"].'\')';
+
+				$resposta["posts_array"][] = array("ID" => $retornoPosts[$i]["ID"], "post_author" => $retornoPosts[$i]["post_author"], "post_date" => $retornoPosts[$i]["post_date"], "post_date_gmt" => $retornoPosts[$i]["post_date_gmt"], "post_content" => $retornoPosts[$i]["post_content"], "post_title" => $retornoPosts[$i]["post_title"], "post_excerpt" => $retornoPosts[$i]["post_excerpt"], "post_status" => $retornoPosts[$i]["post_status"], "post_name" => $retornoPosts[$i]["post_name"], "post_modified" => $retornoPosts[$i]["post_modified"], "post_modified_gmt" => $retornoPosts[$i]["post_modified_gmt"], "post_type" => $retornoPosts[$i]["post_type"]); 
+
+
+
+			}
+
+
+
+			/**** *****/ 
+
+
+
+			for($i=0; $i<count($retornoPosts); $i++){ 
+
+
+
+				$postId = $retornoPosts[$i]["ID"];
+
+				$post_id[] = $retornoPosts[$i]["ID"]; 
+
+
+
+				$sqlPostMeta = $connBlog->prepare("SELECT * FROM `wp_postmeta` WHERE meta_key LIKE '%rank%' AND post_id = ".$postId);
+
+			    $sqlPostMeta->execute(); 
+
+				$retornoPostMeta = $sqlPostMeta->fetchAll(\PDO::FETCH_ASSOC);  
+
+
+
+				for ($x=0; $x<count($retornoPostMeta); $x++) {
+
+					$resposta["rank_meta"][$postId][] = array($retornoPostMeta[$x]["meta_key"], $retornoPostMeta[$x]["meta_value"]);
+
+				} 
+
+
+
+				$sqlPostThumbnail = $connBlog->prepare("SELECT meta_value FROM `wp_postmeta` WHERE meta_key = '_thumbnail_id' AND post_id = ".$postId);
+
+			    $sqlPostThumbnail->execute(); 
+
+				$retornoPostThumbnail = $sqlPostThumbnail->fetch(\PDO::FETCH_ASSOC);  
+
+
+
+				$id_featured_image = $retornoPostThumbnail["meta_value"]; 
+
+
+
+				$sqlFeaturedMedia = $connBlog->prepare("SELECT guid FROM `wp_posts` WHERE ID = ".$id_featured_image);
+
+			    $sqlFeaturedMedia->execute(); 
+
+				$retornoFeaturedMedia = $sqlFeaturedMedia->fetch(\PDO::FETCH_ASSOC);  
+
+
+
+				$resposta["featured_image_posts"][] = $retornoFeaturedMedia["guid"];
+
+
+
+				$sqlPostCategory = $connBlog->prepare("SELECT a.term_taxonomy_id, b.taxonomy FROM wp_term_relationships a
+
+														INNER JOIN wp_term_taxonomy b ON a.term_taxonomy_id = b.term_taxonomy_id
+
+														WHERE b.taxonomy = 'category' 
+
+														AND a.object_id = ".$postId);
+
+			    $sqlPostCategory->execute(); 
+
+				$retornoPostCategory = $sqlPostCategory->fetchAll(\PDO::FETCH_ASSOC); 
+
+
+
+				for($z=0; $z<count($retornoPostCategory); $z++){
+
+					$resposta["categories_posts"][$postId][] = intval($retornoPostCategory[$z]["term_taxonomy_id"]); 
 
 				}
+
+
+
+				$sqlPostTag = $connBlog->prepare("SELECT b.term_taxonomy_id, b.taxonomy, c.slug FROM wp_term_relationships a
+
+													INNER JOIN wp_term_taxonomy b ON a.term_taxonomy_id = b.term_taxonomy_id
+
+													INNER JOIN wp_terms c ON c.term_id = b.term_id
+
+													WHERE b.taxonomy = 'post_tag' 
+
+													AND a.object_id = ".$postId);
+
+			    $sqlPostTag->execute(); 
+
+				$retornoPostTag = $sqlPostTag->fetchAll(\PDO::FETCH_ASSOC); 
+
+
+
+				for($y=0; $y<count($retornoPostTag); $y++){
+
+					$resposta["tags_posts"][$postId][] = array(intval($retornoPostTag[$y]["term_taxonomy_id"]), $retornoPostTag[$y]["slug"]); 
+
+				}
+
+
 
 			} 
 
 
 
-			/* DELETA CATEGORIAS PELO SLUG */ 
-
-			$sqlDeleteCatBySlug = $connSite->prepare("DELETE FROM wp_terms WHERE slug IN (".substr($deleteCategorySlug, 0, -1).")");
-
-		    $sqlDeleteCatBySlug->execute(); 
-
-			/* */ 
+			/**** *****/ 
 
 
 
-			/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
+			$resposta["categories"] = getCategories();
 
-			$sqlDeleteTaxCatByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN ".substr($deleteCategoryIdExistente, 0, -1));
-
-		    $sqlDeleteTaxCatByid->execute(); 
-
-			/* */ 
+			$resposta["tags"] = getTags();
 
 
 
-			/* INSERE CATEGORIAS */ 
-
-			$sqlInsertCat = $connSite->prepare("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
-
-		    $sqlInsertCat->execute();  
-
-			/* */ 
+			/**************************************************************************************************************/
 
 
 
-			/* INSERE TAXONOMIA */
+			$server = '162.240.67.31';
 
-			$sqlInsertTaxCat = $connSite->prepare("INSERT INTO wp_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
+	        $user = DB_USER;
 
-		    $sqlInsertTaxCat->execute();  
+	        $database = DB_NAME;
 
-			/* */
-
-
-
-		/* CATEGORIAS */  
+	        $pass = DB_PASSWORD;
 
 
 
-		/* TAGS */ 
-
-
-			$insertTags = "";
-			$insertTagTaxonomy = "";
-			$deleteTagIdExistente = "";
-			$deleteTagSlug = "";
-			if(!empty($resposta["tags"]) || !is_null($resposta["tags"])){
-
-				$tags = $resposta["tags"];
-
-				for($i=0; $i<count($tags); $i++){   
-
-					$tagTitle = $tags[$i]["name"];
-
-					$tagSlug = $tags[$i]["slug"];
-
-					
-
-					$deleteTagIdExistente .= $tags[$i]["id"].',';  
-
-					$deleteTagSlug .= '"'.$tags[$i]["slug"].'" ,';   
+	        $connSite = conectar_mysql_wp($server, $user, $pass, $database);  
 
 
 
-					$insertTags .= '('.$tags[$i]["id"].', "'.$tags[$i]["name"].'", "'.$tags[$i]["slug"].'", '.$tags[$i]["term_group"].'), '; 
+			function rudr_upload_file_by_url( $image_url ) {
 
 
 
-					$insertTagTaxonomy .= '('.$tags[$i]["id"].', "post_tag", "", 0, '.$tags[$i]["count"].'), '; 
+				// it allows us to use download_url() and wp_handle_sideload() functions
+
+				require_once( ABSPATH . 'wp-admin/includes/file.php' );
+
+
+
+				// download to temp dir
+
+				$temp_file = download_url( $image_url );
+
+
+
+				if( is_wp_error( $temp_file ) ) {
+
+					return false;
 
 				}
 
-			} 
 
 
+				// move the temp file into the uploads directory
 
-			/* DELETA CATEGORIAS PELO SLUG */ 
+				$file = array(
 
-			$sqlDeleteTagBySlug = $connSite->prepare("DELETE FROM wp_terms WHERE slug IN (".substr($deleteTagSlug, 0, -1).")");
+					'name'     => basename( $image_url ),
 
-		    $sqlDeleteTagBySlug->execute(); 
+					'type'     => mime_content_type( $temp_file ),
 
-			/* */ 
+					'tmp_name' => $temp_file,
 
+					'size'     => filesize( $temp_file ),
 
+				);
 
-			/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
+				$sideload = wp_handle_sideload(
 
-			$sqlDeleteTaxTagByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN ".substr($deleteTagIdExistente, 0, -1));
+					$file,
 
-		    $sqlDeleteTaxTagByid->execute(); 
+					array(
 
-			/* */ 
+						'test_form'   => false // no needs to check 'action' parameter
 
+					)
 
+				);
 
-			/* INSERE CATEGORIAS */ 
 
-			$sqlInsertTag = $connSite->prepare("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
 
-		    $sqlInsertTag->execute();  
+				if( ! empty( $sideload[ 'error' ] ) ) {
 
-			/* */ 
+					// you may return error message if you want
 
+					return false;
 
+				} 
 
-			/* INSERE TAXONOMIA */
 
-			$sqlInsertTaxTag = $connSite->prepare("INSERT INTO wp_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
 
-		    $sqlInsertTaxTag->execute();  
+				return $sideload;
 
-			/* */
 
 
+			}
 
-		/* TAGS */
 
 
+			/* CATEGORIAS */
 
-		/* POSTS */ 
 
 
+				if(!empty($resposta["categories"]) || !is_null($resposta["categories"])){
 
-			if(!empty($resposta["posts_array"]) || !is_null($resposta["posts_array"])){
+					$categories = $resposta["categories"];
 
-				$posts_array = $resposta["posts_array"];
+					for($i=0; $i<count($categories); $i++){  
 
-				$posts = $resposta["posts"];
+						if(in_array($categories[$i]["id"], $getCategories)){
 
+							$categoryTitle = $categories[$i]["name"];
 
-
-				$setCategoryPost = $resposta["categories_posts"];
-
-				$setFeaturedImagePost = $resposta["featured_image_posts"];
-
-				$setTagPost = $resposta["tags_posts"]; 
-
-				$setMetaRankPost = $resposta["rank_meta"];
-
-
-
-				for($count=0; $count<count($resposta["posts_array"]); $count++){
-
-
-
-					$postID = $posts_array[$count]["ID"]; 
-
-					$dados_post = $posts_array[$count];
-
-					$dados_posts_json = $posts[$count];
-
-
-
-					if(count(array_intersect($setCategoryPost[$postID], $getCategories)) > 0){
-
-
-
-						$dados_post["post_content"] = str_replace('https://redeturistica.com.br/formulario-de-cotacao/', 'https://'.$_SERVER["HTTP_HOST"].'/formulario-de-cotacao/', $dados_post["post_content"]); 
-
-
-
-						$postTitle = $dados_post["post_title"];
-
-						$postName = $dados_post["post_name"];
-
- 
-
-						$sqlDeletePostByName = $connSite->prepare("DELETE FROM wp_posts WHERE post_name = '".$postName."'");
-
-					    $sqlDeletePostByName->execute();   
-
-						
-
-						$sqlInsertPost = $connSite->prepare("INSERT INTO wp_posts (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, post_name, post_modified, post_modified_gmt, post_type) VALUES ".$dados_posts_json);
-
-					    $sqlInsertPost->execute();
-
-
-
-						$post_id = $connSite->lastInsertId();
-
-
-
-						$filepath = $setFeaturedImagePost[$count]; //Change this to the actual file path... 
-
-
-
-						if($filepath != "null" || $filepath != null){
-
-						    $image = rudr_upload_file_by_url( $filepath );
-
-							$filename = date("dMYHis").'.jpg'; //Change this to the actual file name... 
-
-						    $date = date("Y-m-d H:i:s");
-
-
-
-							$sqlFeaturedImage = $connSite->prepare("SELECT guid, ID FROM `wp_posts` WHERE guid = '".$image["url"]."'");
-
-						    $sqlFeaturedImage->execute();  
-
-							$retornoFeaturedImage = $sqlFeaturedImage->fetch(\PDO::FETCH_ASSOC); 
-
-
-
-							if($retornoFeaturedImage == false){
-
-
-
-							    $sqlInsertFeaturedImage = $connSite->prepare("INSERT INTO wp_posts (post_author, post_title, post_name, post_date, post_date_gmt, post_modified, post_modified_gmt, post_type, guid, post_status, post_mime_type, post_parent) VALUES ('".$posts_array["post_author"]."', '".$postTitle."', '".$filename."', '".$date."', '".$date."', '".$date."', '".$date."', 'attachment', '".$image["url"]."', 'inherit', '".$image["type"]."', '".$post_id."')");
-
-							    $sqlInsertFeaturedImage->execute();  
-
-
-
-								$featured_media_id = $connSite->lastInsertId();
-
-							}else{ 
-
-
-
-								$featured_media_id = $retornoFeaturedImage["ID"];
-
-
-
-							}
-
-
-
-							$sqlInsertMetaFeaturedImage = $connSite->prepare("INSERT INTO wp_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_thumbnail_id', '".$post_id."')");
-
-						    $sqlInsertMetaFeaturedImage->execute();
-
-
-
-							$sqlInsertMeta2FeaturedImage = $connSite->prepare("INSERT INTO wp_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_wp_attached_file', '".$post_id."')");
-
-						    $sqlInsertMeta2FeaturedImage->execute(); 
-
-						}
-
-
-
-						if(!is_null($setMetaRankPost[$postID])){
-
-							for($t=0; $t<count($setMetaRankPost[$postID]); $t++){   
-
-								$sqlInsertRankMeta = $connSite->prepare("INSERT INTO wp_postmeta (meta_key, meta_value, post_id) VALUES ('".$setMetaRankPost[$postID][$t][0]."', '".$setMetaRankPost[$postID][$t][1]."', ".$post_id.")");
-
-							    $rankMeta[] = $sqlInsertRankMeta->execute();  
-
-							}
-
-						}
-
-
-
-						if(!is_null($setCategoryPost[$postID])){
-
-
-
-							$sqlCategoryTaxonomyRelationship = $connSite->prepare("SELECT * FROM `wp_term_relationships` WHERE object_id = ".$post_id);
-
-						    $sqlCategoryTaxonomyRelationship->execute(); 
-
-							$retornoCategoryTaxonomyRelationship = $sqlCategoryTaxonomyRelationship->fetch(\PDO::FETCH_ASSOC);  
-
-
-
-							if(!is_null($retornoCategoryTaxonomyRelationship)){ 
-
-								$sqlDeleteCategoryRelationship = $connSite->prepare("DELETE FROM wp_term_relationships WHERE term_taxonomy_id IN ".$retornoCategoryTaxonomyRelationship);
-
-							    $sqlDeleteCategoryRelationship->execute(); 
-
-							}
-
-
-
-							for($x=0; $x<count($setCategoryPost[$postID]); $x++){  
-
-
-
-								$sqlCategoryTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `wp_term_taxonomy` WHERE term_id = ".$setCategoryPost[$postID][$x]);
-
-							    $sqlCategoryTaxonomy->execute(); 
-
-
-
-								$retornoCategoryTaxonomy = $sqlCategoryTaxonomy->fetch(\PDO::FETCH_ASSOC);  
-
-
-
-								$jsonCategoryTaxonomy = '('.$post_id.', '.$retornoCategoryTaxonomy['term_taxonomy_id'].'), ';
-
-						
-
-								$sqlInsertCategoryRelationship = $connSite->prepare("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonCategoryTaxonomy, 0, -2));
-
-							    $insertCategoryR[] = $sqlInsertCategoryRelationship->execute();  
-
-							}   
-
-						}  
-
-
-
-						if(!is_null($setTagPost[$postID])){
-
-							for($y=0; $y<count($setTagPost[$postID]); $y++){    
-
-
-
-								$sqlTagTaxonomy = $connSite->prepare("SELECT * FROM `wp_terms` WHERE slug = '".$setTagPost[$postID][$y][1]."'");
-
-								$sqlTagTaxonomy->execute();
-
-
-
-								$retornoTagTaxonomy = $sqlTagTaxonomy->fetch(\PDO::FETCH_ASSOC);  
-
-								if(!is_null($retornoTagTaxonomy) || !empty($retornoTagTaxonomy)){
-
-									$term_id = $retornoTagTaxonomy["term_id"];
-
-
-
-									$sqlTermTagTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `wp_term_taxonomy` WHERE term_id = ".$term_id);
-
-								    $sqlTermTagTaxonomy->execute(); 
-
-
-
-									$retornoTermTagTaxonomy = $sqlTermTagTaxonomy->fetch(\PDO::FETCH_ASSOC);  
-
-
-
-									$jsonTagTaxonomy = '('.$post_id.', '.$retornoTermTagTaxonomy['term_taxonomy_id'].'), '; 
+							$categorySlug = $categories[$i]["slug"];
 
 							
 
-									$sqlInsertTagRelationship = $connSite->prepare("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonTagTaxonomy, 0, -2));
+							$deleteCategoryIdExistente .= $categories[$i]["id"].',';  
 
-								    $insertTagR[] = $sqlInsertTagRelationship->execute();   
-
-								}   
-
-							}   
-
-						}    
+							$deleteCategorySlug .= '"'.$categories[$i]["slug"].'" ,'; 
 
 
+
+							$insertTags .= '('.$categories[$i]["id"].', "'.$categories[$i]["name"].'", "'.$categories[$i]["slug"].'", '.$categories[$i]["term_group"].'), '; 
+
+
+
+							$insertTagTaxonomy .= '('.$categories[$i]["id"].', "category", "", 0, '.$categories[$i]["count"].'), ';
+
+						}
 
 					}
 
-				}
+				} 
 
 
 
-			} 
+				/* DELETA CATEGORIAS PELO SLUG */ 
+
+				$sqlDeleteCatBySlug = $connSite->prepare("DELETE FROM wp_terms WHERE slug IN (".substr($deleteCategorySlug, 0, -1).")");
+
+			    $sqlDeleteCatBySlug->execute(); 
+
+				/* */ 
 
 
 
-		/* POSTS */
+				/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
+
+				$sqlDeleteTaxCatByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN ".substr($deleteCategoryIdExistente, 0, -1));
+
+			    $sqlDeleteTaxCatByid->execute(); 
+
+				/* */ 
 
 
 
-		$check_page_exist = get_page_by_title('Cotação de Viagens', 'OBJECT', 'page');
+				/* INSERE CATEGORIAS */ 
+
+				$sqlInsertCat = $connSite->prepare("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
+
+			    $sqlInsertCat->execute();  
+
+				/* */ 
 
 
 
-        if(empty($check_page_exist)) {
+				/* INSERE TAXONOMIA */
 
-            $wpdb->insert('wp_posts', array(
+				$sqlInsertTaxCat = $connSite->prepare("INSERT INTO wp_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
 
-                'comment_status' => 'close',
+			    $sqlInsertTaxCat->execute();  
 
-                'ping_status'    => 'close',
-
-                'post_author'    => 1,
-
-                'post_title'     => ucwords('Cotação de Viagens'),
-
-                'post_name'      => 'formulario-de-cotacao',
-
-                'post_status'    => 'publish',
-
-                'post_content'   => '[VOUCHERTEC_FORMULARIO_COTACAO]',
-
-                'post_type'      => 'page'
-
-            ));
-
-        }
+				/* */
 
 
 
-		$check_page_exist = get_page_by_title('Obrigado', 'OBJECT', 'page');
+			/* CATEGORIAS */  
 
 
 
-        if(empty($check_page_exist)) {
-
-            $wpdb->insert('wp_posts', array(
-
-                'comment_status' => 'close',
-
-                'ping_status'    => 'close',
-
-                'post_author'    => 1,
-
-                'post_title'     => ucwords('Obrigado'),
-
-                'post_name'      => 'obrigado',
-
-                'post_status'    => 'publish',
-
-                'post_content'   => '<h4>Agradecemos o seu contato!</h4>Agora é só aguardar. Em breve retornaremos a sua solicitação.',
-
-                'post_type'      => 'page'
-
-            ));
-
-        }
+			/* TAGS */ 
 
 
+				$insertTags = "";
+				$insertTagTaxonomy = "";
+				$deleteTagIdExistente = "";
+				$deleteTagSlug = "";
+				if(!empty($resposta["tags"]) || !is_null($resposta["tags"])){
 
-  		echo json_encode(array("status" => 1, "message" => "Conteúdo importado com sucesso. Aproveite!"));
+					$tags = $resposta["tags"];
+
+					for($i=0; $i<count($tags); $i++){   
+
+						$tagTitle = $tags[$i]["name"];
+
+						$tagSlug = $tags[$i]["slug"];
+
+						
+
+						$deleteTagIdExistente .= $tags[$i]["id"].',';  
+
+						$deleteTagSlug .= '"'.$tags[$i]["slug"].'" ,';   
+
+
+
+						$insertTags .= '('.$tags[$i]["id"].', "'.$tags[$i]["name"].'", "'.$tags[$i]["slug"].'", '.$tags[$i]["term_group"].'), '; 
+
+
+
+						$insertTagTaxonomy .= '('.$tags[$i]["id"].', "post_tag", "", 0, '.$tags[$i]["count"].'), '; 
+
+					}
+
+				} 
+
+
+
+				/* DELETA CATEGORIAS PELO SLUG */ 
+
+				$sqlDeleteTagBySlug = $connSite->prepare("DELETE FROM wp_terms WHERE slug IN (".substr($deleteTagSlug, 0, -1).")");
+
+			    $sqlDeleteTagBySlug->execute(); 
+
+				/* */ 
+
+
+
+				/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
+
+				$sqlDeleteTaxTagByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN ".substr($deleteTagIdExistente, 0, -1));
+
+			    $sqlDeleteTaxTagByid->execute(); 
+
+				/* */ 
+
+
+
+				/* INSERE CATEGORIAS */ 
+
+				$sqlInsertTag = $connSite->prepare("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
+
+			    $sqlInsertTag->execute();  
+
+				/* */ 
+
+
+
+				/* INSERE TAXONOMIA */
+
+				$sqlInsertTaxTag = $connSite->prepare("INSERT INTO wp_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
+
+			    $sqlInsertTaxTag->execute();  
+
+				/* */
+
+
+
+			/* TAGS */
+
+
+
+			/* POSTS */ 
+
+
+
+				if(!empty($resposta["posts_array"]) || !is_null($resposta["posts_array"])){
+
+					$posts_array = $resposta["posts_array"];
+
+					$posts = $resposta["posts"];
+
+
+
+					$setCategoryPost = $resposta["categories_posts"];
+
+					$setFeaturedImagePost = $resposta["featured_image_posts"];
+
+					$setTagPost = $resposta["tags_posts"]; 
+
+					$setMetaRankPost = $resposta["rank_meta"];
+
+
+
+					for($count=0; $count<count($resposta["posts_array"]); $count++){
+
+
+
+						$postID = $posts_array[$count]["ID"]; 
+
+						$dados_post = $posts_array[$count];
+
+						$dados_posts_json = $posts[$count];
+
+
+
+						if(count(array_intersect($setCategoryPost[$postID], $getCategories)) > 0){
+
+
+
+							$dados_post["post_content"] = str_replace('https://redeturistica.com.br/formulario-de-cotacao/', 'https://'.$_SERVER["HTTP_HOST"].'/formulario-de-cotacao/', $dados_post["post_content"]); 
+
+
+
+							$postTitle = $dados_post["post_title"];
+
+							$postName = $dados_post["post_name"];
+
+	 
+
+							$sqlDeletePostByName = $connSite->prepare("DELETE FROM wp_posts WHERE post_name = '".$postName."'");
+
+						    $sqlDeletePostByName->execute();   
+
+							
+
+							$sqlInsertPost = $connSite->prepare("INSERT INTO wp_posts (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, post_name, post_modified, post_modified_gmt, post_type) VALUES ".$dados_posts_json);
+
+						    $sqlInsertPost->execute();
+
+
+
+							$post_id = $connSite->lastInsertId();
+
+
+
+							$filepath = $setFeaturedImagePost[$count]; //Change this to the actual file path... 
+
+
+
+							if($filepath != "null" || $filepath != null){
+
+							    $image = rudr_upload_file_by_url( $filepath );
+
+								$filename = date("dMYHis").'.jpg'; //Change this to the actual file name... 
+
+							    $date = date("Y-m-d H:i:s");
+
+
+
+								$sqlFeaturedImage = $connSite->prepare("SELECT guid, ID FROM `wp_posts` WHERE guid = '".$image["url"]."'");
+
+							    $sqlFeaturedImage->execute();  
+
+								$retornoFeaturedImage = $sqlFeaturedImage->fetch(\PDO::FETCH_ASSOC); 
+
+
+
+								if($retornoFeaturedImage == false){
+
+
+
+								    $sqlInsertFeaturedImage = $connSite->prepare("INSERT INTO wp_posts (post_author, post_title, post_name, post_date, post_date_gmt, post_modified, post_modified_gmt, post_type, guid, post_status, post_mime_type, post_parent) VALUES ('".$posts_array["post_author"]."', '".$postTitle."', '".$filename."', '".$date."', '".$date."', '".$date."', '".$date."', 'attachment', '".$image["url"]."', 'inherit', '".$image["type"]."', '".$post_id."')");
+
+								    $sqlInsertFeaturedImage->execute();  
+
+
+
+									$featured_media_id = $connSite->lastInsertId();
+
+								}else{ 
+
+
+
+									$featured_media_id = $retornoFeaturedImage["ID"];
+
+
+
+								}
+
+
+
+								$sqlInsertMetaFeaturedImage = $connSite->prepare("INSERT INTO wp_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_thumbnail_id', '".$post_id."')");
+
+							    $sqlInsertMetaFeaturedImage->execute();
+
+
+
+								$sqlInsertMeta2FeaturedImage = $connSite->prepare("INSERT INTO wp_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_wp_attached_file', '".$post_id."')");
+
+							    $sqlInsertMeta2FeaturedImage->execute(); 
+
+							}
+
+
+
+							if(!is_null($setMetaRankPost[$postID])){
+
+								for($t=0; $t<count($setMetaRankPost[$postID]); $t++){   
+
+									$sqlInsertRankMeta = $connSite->prepare("INSERT INTO wp_postmeta (meta_key, meta_value, post_id) VALUES ('".$setMetaRankPost[$postID][$t][0]."', '".$setMetaRankPost[$postID][$t][1]."', ".$post_id.")");
+
+								    $rankMeta[] = $sqlInsertRankMeta->execute();  
+
+								}
+
+							}
+
+
+
+							if(!is_null($setCategoryPost[$postID])){
+
+
+
+								$sqlCategoryTaxonomyRelationship = $connSite->prepare("SELECT * FROM `wp_term_relationships` WHERE object_id = ".$post_id);
+
+							    $sqlCategoryTaxonomyRelationship->execute(); 
+
+								$retornoCategoryTaxonomyRelationship = $sqlCategoryTaxonomyRelationship->fetch(\PDO::FETCH_ASSOC);  
+
+
+
+								if(!is_null($retornoCategoryTaxonomyRelationship)){ 
+
+									$sqlDeleteCategoryRelationship = $connSite->prepare("DELETE FROM wp_term_relationships WHERE term_taxonomy_id IN ".$retornoCategoryTaxonomyRelationship);
+
+								    $sqlDeleteCategoryRelationship->execute(); 
+
+								}
+
+
+
+								for($x=0; $x<count($setCategoryPost[$postID]); $x++){  
+
+
+
+									$sqlCategoryTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `wp_term_taxonomy` WHERE term_id = ".$setCategoryPost[$postID][$x]);
+
+								    $sqlCategoryTaxonomy->execute(); 
+
+
+
+									$retornoCategoryTaxonomy = $sqlCategoryTaxonomy->fetch(\PDO::FETCH_ASSOC);  
+
+
+
+									$jsonCategoryTaxonomy = '('.$post_id.', '.$retornoCategoryTaxonomy['term_taxonomy_id'].'), ';
+
+							
+
+									$sqlInsertCategoryRelationship = $connSite->prepare("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonCategoryTaxonomy, 0, -2));
+
+								    $insertCategoryR[] = $sqlInsertCategoryRelationship->execute();  
+
+								}   
+
+							}  
+
+
+
+							if(!is_null($setTagPost[$postID])){
+
+								for($y=0; $y<count($setTagPost[$postID]); $y++){    
+
+
+
+									$sqlTagTaxonomy = $connSite->prepare("SELECT * FROM `wp_terms` WHERE slug = '".$setTagPost[$postID][$y][1]."'");
+
+									$sqlTagTaxonomy->execute();
+
+
+
+									$retornoTagTaxonomy = $sqlTagTaxonomy->fetch(\PDO::FETCH_ASSOC);  
+
+									if(!is_null($retornoTagTaxonomy) || !empty($retornoTagTaxonomy)){
+
+										$term_id = $retornoTagTaxonomy["term_id"];
+
+
+
+										$sqlTermTagTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `wp_term_taxonomy` WHERE term_id = ".$term_id);
+
+									    $sqlTermTagTaxonomy->execute(); 
+
+
+
+										$retornoTermTagTaxonomy = $sqlTermTagTaxonomy->fetch(\PDO::FETCH_ASSOC);  
+
+
+
+										$jsonTagTaxonomy = '('.$post_id.', '.$retornoTermTagTaxonomy['term_taxonomy_id'].'), '; 
+
+								
+
+										$sqlInsertTagRelationship = $connSite->prepare("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonTagTaxonomy, 0, -2));
+
+									    $insertTagR[] = $sqlInsertTagRelationship->execute();   
+
+									}   
+
+								}   
+
+							}    
+
+
+
+						}
+
+					}
+
+
+
+				} 
+
+
+
+			/* POSTS */
+
+
+
+			$check_page_exist = get_page_by_title('Cotação de Viagens', 'OBJECT', 'page');
+
+
+
+	        if(empty($check_page_exist)) {
+
+	            $wpdb->insert('wp_posts', array(
+
+	                'comment_status' => 'close',
+
+	                'ping_status'    => 'close',
+
+	                'post_author'    => 1,
+
+	                'post_title'     => ucwords('Cotação de Viagens'),
+
+	                'post_name'      => 'formulario-de-cotacao',
+
+	                'post_status'    => 'publish',
+
+	                'post_content'   => '[VOUCHERTEC_FORMULARIO_COTACAO]',
+
+	                'post_type'      => 'page'
+
+	            ));
+
+	        }
+
+
+
+			$check_page_exist = get_page_by_title('Obrigado', 'OBJECT', 'page');
+
+
+
+	        if(empty($check_page_exist)) {
+
+	            $wpdb->insert('wp_posts', array(
+
+	                'comment_status' => 'close',
+
+	                'ping_status'    => 'close',
+
+	                'post_author'    => 1,
+
+	                'post_title'     => ucwords('Obrigado'),
+
+	                'post_name'      => 'obrigado',
+
+	                'post_status'    => 'publish',
+
+	                'post_content'   => '<h4>Agradecemos o seu contato!</h4>Agora é só aguardar. Em breve retornaremos a sua solicitação.',
+
+	                'post_type'      => 'page'
+
+	            ));
+
+	        }
+
+
+
+	  		echo json_encode(array("status" => 1, "message" => "Conteúdo importado com sucesso. Aproveite!"));
+	  	}
 
     } 
 

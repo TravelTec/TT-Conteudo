@@ -182,6 +182,8 @@ function checkLicenseIugu(){
 	        	var retorno = data.slice(0,-1);
 				var resposta = JSON.parse(retorno);  
 
+				jQuery('#FORMLICENCA').unbind('submit');
+
 			    if(resposta["status"] == 0 || resposta["status"] == 2){ 
 	            	swal({
 	                	title: "Erro ao validar licença",
@@ -214,16 +216,16 @@ function importContentDaily(){
 	jQuery.ajax({
         type: "POST",
         url: wp_ajax.ajaxurl,
-        data: { action: "import_content_daily" },
+        data: { action: "import_content" },
         success: function( data ) {
         	var retorno = data.slice(0,-1);
 			var resposta = JSON.parse(retorno);
-            if(retorno["status"] == 0){
+            if(resposta["status"] == 0){
             	jQuery("#importData").html('Importar todo o conteúdo');
             	jQuery("#importData").removeAttr("disabled");
             	swal({
                 	title: "Erro ao importar.",
-                  	text: "Não foi possível cadastrar os posts. Tente novamente.",
+                  	text: resposta["message"],
                   	icon: "error" 
                 });
             }else{
@@ -269,12 +271,13 @@ function importContentTours(){
 	        success: function( data ) {
 	        	var retorno = data.slice(0,-1);
 				var resposta = JSON.parse(retorno);
-	            if(retorno["status"] == 0){
+				console.log(resposta);
+	            if(resposta["status"] == 0){
 	            	jQuery("#importData").html('Importar todo o conteúdo');
 	            	jQuery("#importData").removeAttr("disabled");
 	            	swal({
 	                	title: "Erro ao importar.",
-	                  	text: "Não foi possível cadastrar os posts. Tente novamente.",
+	                  	text: resposta["message"],
 	                  	icon: "error" 
 	                });
 	            }else{
