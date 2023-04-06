@@ -200,7 +200,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoSolePraia" value="109" <?= ($options == 109 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoSolePraia" value="109" onclick="addCategoria('valueInfoSolePraia', 109)" <?= ($options == 109 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -234,7 +234,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoLuxo" value="105" <?= ($options == 105 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoLuxo" value="105" onclick="addCategoria('valueInfoLuxo', 105)" <?= ($options == 105 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -268,7 +268,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCharme" value="113" <?= ($options == 113 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCharme" value="113" onclick="addCategoria('valueInfoCharme', 113)" <?= ($options == 113 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -302,7 +302,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoLua" value="114" <?= ($options == 114 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoLua" value="114" onclick="addCategoria('valueInfoLua', 114)" <?= ($options == 114 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -336,7 +336,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCompras" value="115" <?= ($options == 115 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCompras" value="115" onclick="addCategoria('valueInfoCompras', 115)" <?= ($options == 115 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -370,7 +370,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCruzeiros" value="116" <?= ($options == 116 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCruzeiros" value="116" onclick="addCategoria('valueInfoCruzeiros', 116)" <?= ($options == 116 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -404,7 +404,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoGastronomico" value="104" <?= ($options == 104 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoGastronomico" value="104" onclick="addCategoria('valueInfoGastronomico', 104)" <?= ($options == 104 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -438,7 +438,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoAventura" value="96" <?= ($options == 96 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoAventura" value="96" onclick="addCategoria('valueInfoAventura', 96)" <?= ($options == 96 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -472,7 +472,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCultural" value="98" <?= ($options == 98 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoCultural" value="98" onclick="addCategoria('valueInfoCultural', 98)" <?= ($options == 98 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -892,7 +892,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoDiversidade" value="99" <?= ($options == 99 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoDiversidade" onclick="addCategoria('valueInfoDiversidade', 99)" value="99" <?= ($options == 99 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -926,7 +926,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEventos" value="103" <?= ($options == 103 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEventos" onclick="addCategoria('valueInfoEventos', 103)" value="103" <?= ($options == 103 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -960,7 +960,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEstudos" value="102" <?= ($options == 102 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEstudos" onclick="addCategoria('valueInfoEstudos', 102)" value="102" <?= ($options == 102 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -994,7 +994,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEsportivo" value="101" <?= ($options == 101 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEsportivo" value="101" onclick="addCategoria('valueInfoEsportivo', 101)" <?= ($options == 101 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -1028,7 +1028,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEcoturismo" value="100" <?= ($options == 100 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoEcoturismo" value="100" onclick="addCategoria('valueInfoEcoturismo', 100)" <?= ($options == 100 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -1062,7 +1062,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoNautico" value="106" <?= ($options == 106 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoNautico" value="106" onclick="addCategoria('valueInfoNautico', 106)" <?= ($options == 106 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -1096,7 +1096,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoReligioso" value="107" <?= ($options == 107 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoReligioso" value="107" onclick="addCategoria('valueInfoReligioso', 107)" <?= ($options == 107 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -1130,7 +1130,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoAgroturismo" value="95" <?= ($options == 95 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoAgroturismo" value="95" onclick="addCategoria('valueInfoAgroturismo', 95)" <?= ($options == 95 ? 'checked' : '') ?>>
 
                 <?php
 
@@ -1164,7 +1164,7 @@
 
                 ?>
 
-                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoSaude" value="108" <?= ($options == 108 ? 'checked' : '') ?>>
+                <input type="checkbox" id="<?php echo esc_attr( $args['label_for'] ); ?>" name="valueInfoSaude" value="108" onclick="addCategoria('valueInfoSaude', 108)" <?= ($options == 108 ? 'checked' : '') ?>>
 
                 <?php
 
