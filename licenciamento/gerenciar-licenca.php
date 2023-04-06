@@ -2,6 +2,38 @@
 
 	defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
+	function add_categoria(){
+
+    	$meta_name = $_POST['meta_name'];
+    	$meta_value = $_POST['meta_value'];
+
+    	$server = '162.240.67.31'; 
+        $user = DB_USER; 
+        $database = DB_NAME; 
+        $pass = DB_PASSWORD; 
+
+        $connSite = conectar_mysql_wp($server, $user, $pass, $database);  
+
+        $sqlGetMetaCategory = $connSite->prepare("SELECT * FROM `wp_options` WHERE option_name = '".$meta_name."'"); 
+	    $sqlGetMetaCategory->execute(); 
+
+		$getMetaCategory = $sqlGetMetaCategory->fetch(\PDO::FETCH_ASSOC); 
+
+		if(empty($getMetaCategory) || is_null($getMetaCategory)){
+ 
+			$setMetaCategory = $connSite->prepare("INSERT INTO wp_options (option_name, option_value, autoload) VALUES ('".$meta_name."', ".$meta_value.", 'yes')"); 
+			$setMetaCategory->execute();  
+
+		}else{ 
+
+			$setMetaCategory = $connSite->prepare("UPDATE wp_options SET option_value = ".$meta_value." WHERE option_name = '".$meta_name."'"); 
+			$setMetaCategory->execute(); 
+
+		}
+		
+		
+	}
+
 	add_action( 'wp_ajax_checkLicenseIugu', 'checkLicenseIugu' );
     add_action( 'wp_ajax_nopriv_checkLicenseIugu', 'checkLicenseIugu' );
     function checkLicenseIugu(){ 
