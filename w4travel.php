@@ -62,11 +62,11 @@
 
         $myUpdateChecker = Puc_v4_Factory::buildUpdateChecker( 
 
-            'https://github.com/TravelTec/w4travel',  
+            'https://github.com/TravelTec/TT-Conteudo',  
 
             __FILE__,  
 
-            'w4travel'  
+            'TT-Conteudo'  
 
         );  
 
