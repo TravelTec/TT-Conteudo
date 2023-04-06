@@ -196,11 +196,9 @@ function checkLicenseIugu(){
 	            }else{ 
 	            	swal({
 	                	title: "Sucesso!",
-	                  	text: "Licença validada com sucesso. Aguarde, o conteúdo diário já será importado.",
+	                  	text: "Licença validada com sucesso!",
 	                  	icon: "success" 
-	                }).then((value) => {
-	                	importContentDaily();
-	        		});
+	                });;
 	            }
 	        }
 	    });
@@ -256,7 +254,7 @@ function importContentTours(){
 	            	
 		swal({
         	title: "Erro ao importar",
-          	text: "É necessário ter uma licença ativa e válida para fazer a importação do conteúdo.",
+          	text: "Antes de iniciar as importações, valide sua licença na aba Configurações e selecione o tipo de conteúdo que deseja.",
           	icon: "error" 
         }).then((value) => {
         	swal.close();
