@@ -1210,7 +1210,7 @@
 		}    
 
 		if(empty($getCategories)){
-				echo json_encode(array("status" => 0, "message" => "Você precisa selecionar ao menos uma categoria de turismo."));
+				echo json_encode(array("status" => 0, "message" => "Antes de iniciar as importações, selecione o tipo de conteúdo que deseja."));
 		}else{ 
 
 
