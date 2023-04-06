@@ -210,6 +210,12 @@ function addCategoria(meta_name, meta_value){
 	jQuery("#importData").attr("disabled", "disabled");
     jQuery("#importData").prop("disabled", true);
 	jQuery("#importData").html('<img src="https://media.tenor.com/images/a742721ea2075bc3956a2ff62c9bfeef/tenor.gif" style="height:10px;margin-right:3px;"> Atualizando categorias... Aguarde.');
+	
+	if(jQuery("#"+meta_name).is(':checked') == true){
+		meta_value = meta_value;
+	}else{
+		meta_value = '';
+	}
 	jQuery.ajax({
         type: "POST",
         url: wp_ajax.ajaxurl,
