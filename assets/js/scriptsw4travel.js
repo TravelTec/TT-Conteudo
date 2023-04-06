@@ -207,12 +207,16 @@ function checkLicenseIugu(){
 }
 
 function addCategoria(meta_name, meta_value){
+	jQuery("#importData").attr("disabled", "disabled");
+    jQuery("#importData").prop("disabled", true);
+	jQuery("#importData").html('<img src="https://media.tenor.com/images/a742721ea2075bc3956a2ff62c9bfeef/tenor.gif" style="height:10px;margin-right:3px;"> Atualizando categorias... Aguarde.');
 	jQuery.ajax({
         type: "POST",
         url: wp_ajax.ajaxurl,
         data: { meta_name:meta_name, meta_value:meta_value, action: "add_categoria" },
         success: function( data ) {
-			
+			jQuery("#importData").html('Importar todo o conteúdo');
+            	jQuery("#importData").removeAttr("disabled");
         }
     });
 }
