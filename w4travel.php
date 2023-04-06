@@ -16,7 +16,7 @@
 
 	Description: Travel Tec - Conteúdo Turístico é um plugin que atualiza diariamente o blog do seu site com posts sobre temas de viagens. O resultado é um site atualizado com o que interessa para quem deseja viajar.
 
-	Version: 2.0.1
+	Version: 2.0.2
 
 	Author: Travel Tec
 
