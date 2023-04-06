@@ -1622,7 +1622,7 @@
 
                         <p style="font-size:17px;line-height: 1.8"> O Plugin <strong>Travel Tec - CONTEÚDO TURÍSTICO</strong> foi desenvolvido para resolver o problema das agências de viagens em manter um conteúdo relevante para seus clientes e principalmente atrair novos clientes. </p>
 
-			<button name="importData" id="importData" class="button button-secondary" onclick="importContentTours()">Importar todo o conteúdo</button>
+			
 
                         <?php 
 
@@ -1666,7 +1666,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
                             $dateBefore = date("Y-m-d 23:59:59");
 
-                            $sqlPosts = $connBlog->prepare("SELECT ID, post_date, post_title, post_excerpt FROM `wp_posts` where post_date >= '".$data_inicio."' and post_date <= '".$data_final."'");
+                            $sqlPosts = $connBlog->prepare("SELECT ID, post_date, post_title, post_excerpt FROM `wp_posts` where post_date >= '".$data_inicio."' and post_date <= '".$data_final."' AND post_status = 'publish'");
 
                             $sqlPosts->execute(); 
 
@@ -1930,7 +1930,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
                         <p style="font-size:17px;line-height: 1.8"><i>Lembrando que ao desmarcar uma opção o plugin irá remover o conteúdo que pertence a essa categoria.</i></p>
 
-
+			<button name="importData" id="importData" class="button button-secondary" onclick="importContentTours()">Importar todo o conteúdo</button>
 
                         <form action="options.php" method="post"> 
 
