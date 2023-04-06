@@ -10,13 +10,13 @@
 
 	Plugin Name: Voucher Tec - Conteúdo Turístico
 
-	Plugin URI: https://traveltec.com.br
+	Plugin URI: https://github.com/TravelTec/TT-Conteudo
 
-	GitHub Plugin URI: https://traveltec.com.br
+	GitHub Plugin URI: https://github.com/TravelTec/TT-Conteudo
 
 	Description: Travel Tec - Conteúdo Turístico é um plugin que atualiza diariamente o blog do seu site com posts sobre temas de viagens. O resultado é um site atualizado com o que interessa para quem deseja viajar.
 
-	Version: 2.0.2
+	Version: 2.1.0
 
 	Author: Travel Tec
 
