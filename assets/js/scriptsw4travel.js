@@ -206,6 +206,17 @@ function checkLicenseIugu(){
 	} 
 }
 
+function addCategoria(meta_name, meta_value){
+	jQuery.ajax({
+        type: "POST",
+        url: wp_ajax.ajaxurl,
+        data: { meta_name:meta_name, meta_value:meta_value, action: "add_categoria" },
+        success: function( data ) {
+			
+        }
+    });
+}
+
 function importContentDaily(){
 	jQuery("#importData").attr("disabled", "disabled");
     jQuery("#importData").prop("disabled", true);
