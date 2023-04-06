@@ -533,7 +533,7 @@
 
 				/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
 
-				$sqlDeleteTaxCatByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN ".substr($deleteCategoryIdExistente, 0, -1));
+				$sqlDeleteTaxCatByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN (".substr($deleteCategoryIdExistente, 0, -1).")");
 
 			    $sqlDeleteTaxCatByid->execute(); 
 
@@ -614,7 +614,7 @@
 
 				/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
 
-				$sqlDeleteTaxTagByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN ".substr($deleteTagIdExistente, 0, -1));
+				$sqlDeleteTaxTagByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN (".substr($deleteTagIdExistente, 0, -1).")");
 
 			    $sqlDeleteTaxTagByid->execute(); 
 
