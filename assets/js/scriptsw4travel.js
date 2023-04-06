@@ -233,8 +233,9 @@ function importContentDaily(){
                   	text: "Conteúdo importado com sucesso. Aproveite!",
                   	icon: "success" 
                 }).then((value) => {
-            		window.location.reload();
-        		});
+            	jQuery("#importData").html('Importar todo o conteúdo');
+            	jQuery("#importData").removeAttr("disabled");
+	        		});
             }
         }
     });
@@ -282,9 +283,7 @@ function importContentTours(){
 	                	title: "Sucesso!",
 	                  	text: "Conteúdo importado com sucesso. Aproveite!",
 	                  	icon: "success" 
-	                }).then((value) => {
-	            		window.location.reload();
-	        		});
+	                });
 	            }
 	        }
 	    });

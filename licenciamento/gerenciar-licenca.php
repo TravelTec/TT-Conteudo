@@ -10,6 +10,32 @@
     	$urlOrigin = $_POST['urlOrigin'];
     	$urlHost = $_POST['urlHost']; 
 
+    	$server = '162.240.67.31'; 
+        $user = DB_USER; 
+        $database = DB_NAME; 
+        $pass = DB_PASSWORD; 
+
+        $connSite = conectar_mysql_wp($server, $user, $pass, $database);  
+
+        $sqlGetLicense = $connSite->prepare("SELECT * FROM `wp_options` WHERE option_name = 'setValueLicense'"); 
+	    $sqlGetLicense->execute(); 
+
+		$getLicense = $sqlGetLicense->fetch(\PDO::FETCH_ASSOC); 
+
+		if(empty($getLicense) || is_null($getLicense)){
+ 
+			$setLicense = $connSite->prepare("INSERT INTO wp_options (option_name, option_value, autoload) VALUES ('setValueLicense', '".$license."', 'yes')"); 
+			$setLicense->execute();  
+
+		}else{
+
+			$idLicense = $getLicense["option_id"]; 
+
+			$setLicense = $connSite->prepare("UPDATE wp_options SET option_value = '".$license."' WHERE option_name = 'setValueLicense'"); 
+			$setLicense->execute(); 
+
+		}
+
 		$curl = curl_init();
 
 		curl_setopt_array($curl, array(
