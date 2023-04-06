@@ -19,19 +19,13 @@
         $sqlGetMetaCategory = $connSite->prepare("SELECT * FROM `wp_options` WHERE option_name = '".$meta_name."'"); 
 	    $sqlGetMetaCategory->execute(); 
 
-		$getMetaCategory = $sqlGetMetaCategory->fetch(\PDO::FETCH_ASSOC); 
+		$getMetaCategory = $sqlGetMetaCategory->fetch(\PDO::FETCH_ASSOC);  
 
-		if(empty($getMetaCategory) || is_null($getMetaCategory)){
- 
-			$setMetaCategory = $connSite->prepare("INSERT INTO wp_options (option_name, option_value, autoload) VALUES ('".$meta_name."', ".$meta_value.", 'yes')"); 
-			$setMetaCategory->execute();  
+		$delMetaCategory = $connSite->prepare("DELETE FROM wp_options WHERE option_name = '".$meta_name."'"); 
+		$delMetaCategory->execute();
 
-		}else{ 
-
-			$setMetaCategory = $connSite->prepare("UPDATE wp_options SET option_value = '' WHERE option_name = '".$meta_name."'"); 
-			$setMetaCategory->execute(); 
-
-		}
+		$setMetaCategory = $connSite->prepare("INSERT INTO wp_options (option_name, option_value, autoload) VALUES ('".$meta_name."', ".$meta_value.", 'yes')"); 
+		$setMetaCategory->execute();
 		
 		
 	}
