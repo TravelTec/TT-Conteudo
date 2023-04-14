@@ -406,6 +406,8 @@
 	        $database = DB_NAME;
 
 	        $pass = DB_PASSWORD;
+			
+			$table_prefix = (!empty(DB_TABLE_PREFIX) ? DB_TABLE_PREFIX : 'wp');
 
 
 
@@ -523,7 +525,7 @@
 
 				/* DELETA CATEGORIAS PELO SLUG */ 
 
-				$sqlDeleteCatBySlug = $connSite->prepare("DELETE FROM wp_terms WHERE slug IN (".substr($deleteCategorySlug, 0, -1).")");
+				$sqlDeleteCatBySlug = $connSite->prepare("DELETE FROM ".$table_prefix."_terms WHERE slug IN (".substr($deleteCategorySlug, 0, -1).")");
 
 			    $sqlDeleteCatBySlug->execute(); 
 
@@ -533,7 +535,7 @@
 
 				/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
 
-				$sqlDeleteTaxCatByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN (".substr($deleteCategoryIdExistente, 0, -1).")");
+				$sqlDeleteTaxCatByid = $connSite->prepare("DELETE FROM ".$table_prefix."_term_taxonomy WHERE term_id IN (".substr($deleteCategoryIdExistente, 0, -1).")");
 
 			    $sqlDeleteTaxCatByid->execute(); 
 
@@ -543,7 +545,7 @@
 
 				/* INSERE CATEGORIAS */ 
 
-				$sqlInsertCat = $connSite->prepare("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
+				$sqlInsertCat = $connSite->prepare("INSERT INTO ".$table_prefix."_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
 
 			    $sqlInsertCat->execute();  
 
@@ -553,7 +555,7 @@
 
 				/* INSERE TAXONOMIA */
 
-				$sqlInsertTaxCat = $connSite->prepare("INSERT INTO wp_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
+				$sqlInsertTaxCat = $connSite->prepare("INSERT INTO ".$table_prefix."_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
 
 			    $sqlInsertTaxCat->execute();  
 
@@ -604,7 +606,7 @@
 
 				/* DELETA CATEGORIAS PELO SLUG */ 
 
-				$sqlDeleteTagBySlug = $connSite->prepare("DELETE FROM wp_terms WHERE slug IN (".substr($deleteTagSlug, 0, -1).")");
+				$sqlDeleteTagBySlug = $connSite->prepare("DELETE FROM ".$table_prefix."_terms WHERE slug IN (".substr($deleteTagSlug, 0, -1).")");
 
 			    $sqlDeleteTagBySlug->execute(); 
 
@@ -614,7 +616,7 @@
 
 				/* DELETA TAXAONOMIA DA CATEGORIA PELO ID */
 
-				$sqlDeleteTaxTagByid = $connSite->prepare("DELETE FROM wp_term_taxonomy WHERE term_id IN (".substr($deleteTagIdExistente, 0, -1).")");
+				$sqlDeleteTaxTagByid = $connSite->prepare("DELETE FROM ".$table_prefix."_term_taxonomy WHERE term_id IN (".substr($deleteTagIdExistente, 0, -1).")");
 
 			    $sqlDeleteTaxTagByid->execute(); 
 
@@ -624,7 +626,7 @@
 
 				/* INSERE CATEGORIAS */ 
 
-				$sqlInsertTag = $connSite->prepare("INSERT INTO wp_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
+				$sqlInsertTag = $connSite->prepare("INSERT INTO ".$table_prefix."_terms (term_id, name, slug, term_group) VALUES ".substr($insertTags, 0, -2));
 
 			    $sqlInsertTag->execute();  
 
@@ -634,7 +636,7 @@
 
 				/* INSERE TAXONOMIA */
 
-				$sqlInsertTaxTag = $connSite->prepare("INSERT INTO wp_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
+				$sqlInsertTaxTag = $connSite->prepare("INSERT INTO ".$table_prefix."_term_taxonomy (term_id, taxonomy, description, parent, count) VALUES ".substr($insertTagTaxonomy, 0, -2));
 
 			    $sqlInsertTaxTag->execute();  
 
@@ -694,13 +696,13 @@
 
 	 
 
-							$sqlDeletePostByName = $connSite->prepare("DELETE FROM wp_posts WHERE post_name = '".$postName."'");
+							$sqlDeletePostByName = $connSite->prepare("DELETE FROM ".$table_prefix."_posts WHERE post_name = '".$postName."'");
 
 						    $sqlDeletePostByName->execute();   
 
 							
 
-							$sqlInsertPost = $connSite->prepare("INSERT INTO wp_posts (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, post_name, post_modified, post_modified_gmt, post_type) VALUES ".$dados_posts_json);
+							$sqlInsertPost = $connSite->prepare("INSERT INTO ".$table_prefix."_posts (post_author, post_date, post_date_gmt, post_content, post_title, post_excerpt, post_status, post_name, post_modified, post_modified_gmt, post_type) VALUES ".$dados_posts_json);
 
 						    $sqlInsertPost->execute();
 
@@ -724,7 +726,7 @@
 
 
 
-								$sqlFeaturedImage = $connSite->prepare("SELECT guid, ID FROM `wp_posts` WHERE guid = '".$image["url"]."'");
+								$sqlFeaturedImage = $connSite->prepare("SELECT guid, ID FROM `".$table_prefix."_posts` WHERE guid = '".$image["url"]."'");
 
 							    $sqlFeaturedImage->execute();  
 
@@ -736,7 +738,7 @@
 
 
 
-								    $sqlInsertFeaturedImage = $connSite->prepare("INSERT INTO wp_posts (post_author, post_title, post_name, post_date, post_date_gmt, post_modified, post_modified_gmt, post_type, guid, post_status, post_mime_type, post_parent) VALUES ('".$posts_array["post_author"]."', '".$postTitle."', '".$filename."', '".$date."', '".$date."', '".$date."', '".$date."', 'attachment', '".$image["url"]."', 'inherit', '".$image["type"]."', '".$post_id."')");
+								    $sqlInsertFeaturedImage = $connSite->prepare("INSERT INTO ".$table_prefix."_posts (post_author, post_title, post_name, post_date, post_date_gmt, post_modified, post_modified_gmt, post_type, guid, post_status, post_mime_type, post_parent) VALUES ('".$posts_array["post_author"]."', '".$postTitle."', '".$filename."', '".$date."', '".$date."', '".$date."', '".$date."', 'attachment', '".$image["url"]."', 'inherit', '".$image["type"]."', '".$post_id."')");
 
 								    $sqlInsertFeaturedImage->execute();  
 
@@ -756,13 +758,13 @@
 
 
 
-								$sqlInsertMetaFeaturedImage = $connSite->prepare("INSERT INTO wp_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_thumbnail_id', '".$post_id."')");
+								$sqlInsertMetaFeaturedImage = $connSite->prepare("INSERT INTO ".$table_prefix."_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_thumbnail_id', '".$post_id."')");
 
 							    $sqlInsertMetaFeaturedImage->execute();
 
 
 
-								$sqlInsertMeta2FeaturedImage = $connSite->prepare("INSERT INTO wp_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_wp_attached_file', '".$post_id."')");
+								$sqlInsertMeta2FeaturedImage = $connSite->prepare("INSERT INTO ".$table_prefix."_postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_wp_attached_file', '".$post_id."')");
 
 							    $sqlInsertMeta2FeaturedImage->execute(); 
 
@@ -774,7 +776,7 @@
 
 								for($t=0; $t<count($setMetaRankPost[$postID]); $t++){   
 
-									$sqlInsertRankMeta = $connSite->prepare("INSERT INTO wp_postmeta (meta_key, meta_value, post_id) VALUES ('".$setMetaRankPost[$postID][$t][0]."', '".$setMetaRankPost[$postID][$t][1]."', ".$post_id.")");
+									$sqlInsertRankMeta = $connSite->prepare("INSERT INTO ".$table_prefix."_postmeta (meta_key, meta_value, post_id) VALUES ('".$setMetaRankPost[$postID][$t][0]."', '".$setMetaRankPost[$postID][$t][1]."', ".$post_id.")");
 
 								    $rankMeta[] = $sqlInsertRankMeta->execute();  
 
@@ -788,7 +790,7 @@
 
 
 
-								$sqlCategoryTaxonomyRelationship = $connSite->prepare("SELECT * FROM `wp_term_relationships` WHERE object_id = ".$post_id);
+								$sqlCategoryTaxonomyRelationship = $connSite->prepare("SELECT * FROM `".$table_prefix."_term_relationships` WHERE object_id = ".$post_id);
 
 							    $sqlCategoryTaxonomyRelationship->execute(); 
 
@@ -798,7 +800,7 @@
 
 								if(!is_null($retornoCategoryTaxonomyRelationship)){ 
 
-									$sqlDeleteCategoryRelationship = $connSite->prepare("DELETE FROM wp_term_relationships WHERE term_taxonomy_id IN ".$retornoCategoryTaxonomyRelationship);
+									$sqlDeleteCategoryRelationship = $connSite->prepare("DELETE FROM ".$table_prefix."_term_relationships WHERE term_taxonomy_id IN ".$retornoCategoryTaxonomyRelationship);
 
 								    $sqlDeleteCategoryRelationship->execute(); 
 
@@ -810,7 +812,7 @@
 
 
 
-									$sqlCategoryTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `wp_term_taxonomy` WHERE term_id = ".$setCategoryPost[$postID][$x]);
+									$sqlCategoryTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `".$table_prefix."_term_taxonomy` WHERE term_id = ".$setCategoryPost[$postID][$x]);
 
 								    $sqlCategoryTaxonomy->execute(); 
 
@@ -824,7 +826,7 @@
 
 							
 
-									$sqlInsertCategoryRelationship = $connSite->prepare("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonCategoryTaxonomy, 0, -2));
+									$sqlInsertCategoryRelationship = $connSite->prepare("INSERT INTO ".$table_prefix."_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonCategoryTaxonomy, 0, -2));
 
 								    $insertCategoryR[] = $sqlInsertCategoryRelationship->execute();  
 
@@ -840,7 +842,7 @@
 
 
 
-									$sqlTagTaxonomy = $connSite->prepare("SELECT * FROM `wp_terms` WHERE slug = '".$setTagPost[$postID][$y][1]."'");
+									$sqlTagTaxonomy = $connSite->prepare("SELECT * FROM `".$table_prefix."_terms` WHERE slug = '".$setTagPost[$postID][$y][1]."'");
 
 									$sqlTagTaxonomy->execute();
 
@@ -854,7 +856,7 @@
 
 
 
-										$sqlTermTagTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `wp_term_taxonomy` WHERE term_id = ".$term_id);
+										$sqlTermTagTaxonomy = $connSite->prepare("SELECT term_taxonomy_id FROM `".$table_prefix."_term_taxonomy` WHERE term_id = ".$term_id);
 
 									    $sqlTermTagTaxonomy->execute(); 
 
@@ -868,7 +870,7 @@
 
 								
 
-										$sqlInsertTagRelationship = $connSite->prepare("INSERT INTO wp_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonTagTaxonomy, 0, -2));
+										$sqlInsertTagRelationship = $connSite->prepare("INSERT INTO ".$table_prefix."_term_relationships (object_id, term_taxonomy_id) VALUES ".substr($jsonTagTaxonomy, 0, -2));
 
 									    $insertTagR[] = $sqlInsertTagRelationship->execute();   
 
@@ -900,7 +902,7 @@
 
 	        if(empty($check_page_exist)) {
 
-	            $wpdb->insert('wp_posts', array(
+	            $wpdb->insert($table_prefix.'_posts', array(
 
 	                'comment_status' => 'close',
 
@@ -930,7 +932,7 @@
 
 	        if(empty($check_page_exist)) {
 
-	            $wpdb->insert('wp_posts', array(
+	            $wpdb->insert($table_prefix.'_posts', array(
 
 	                'comment_status' => 'close',
 
