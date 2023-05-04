@@ -812,7 +812,7 @@
 
 			
 
-			$table_prefix = (!empty(DB_TABLE_PREFIX) ? DB_TABLE_PREFIX : 'wp_');
+			$table_prefix = $wpdb->prefix;
 
 
 
