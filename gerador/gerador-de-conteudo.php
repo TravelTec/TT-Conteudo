@@ -796,7 +796,7 @@
 
 
 
-			$server = '162.240.67.31';
+			$server = DB_HOST;
 
 
 
