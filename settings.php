@@ -3740,7 +3740,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
 
 
-                                                        <h5><?=$retornoPosts[$i]["post_title"]?></h5>
+                                                        <h5><?=utf8_encode($retornoPosts[$i]["post_title"])?></h5>
 
 
 
@@ -3764,7 +3764,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
 
 
-                                                                <?=mb_substr($retornoPosts[$i]["post_excerpt"], 0, 195)?> [...]
+                                                                <?=utf8_encode(mb_substr($retornoPosts[$i]["post_excerpt"], 0, 195))?> [...]
 
 
 
