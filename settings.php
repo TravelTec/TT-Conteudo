@@ -3740,7 +3740,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
 
 
-                                                        <h5><?=utf8_encode($retornoPosts[$i]["post_title"])?></h5>
+                                                        <h5><?=(DB_HOST == 'localhost' || DB_HOST == '162.240.67.31' ? $retornoPosts[$i]["post_title"] : utf8_encode($retornoPosts[$i]["post_title"]))?></h5>
 
 
 
@@ -3764,7 +3764,7 @@ date_default_timezone_set('America/Sao_Paulo');
 
 
 
-                                                                <?=utf8_encode(mb_substr($retornoPosts[$i]["post_excerpt"], 0, 195))?> [...]
+                                                                <?=(DB_HOST == 'localhost' || DB_HOST == '162.240.67.31' ? mb_substr($retornoPosts[$i]["post_excerpt"], 0, 195) : utf8_encode(mb_substr($retornoPosts[$i]["post_excerpt"], 0, 195)))?> [...]
 
 
 
