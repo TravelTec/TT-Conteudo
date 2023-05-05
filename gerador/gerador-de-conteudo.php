@@ -1435,7 +1435,7 @@
 
 									$retornoFeaturedImage = $sqlFeaturedImage->fetch(\PDO::FETCH_ASSOC);  
 
-									$nameImageBD = str_replace("/wp-content/uploads/", "", str_replace($_SERVER['HTTP_HOST'], "", str_replace("https://", "", $image["url"])));
+									$nameImageBD = str_replace("/wp-content/uploads/", "", str_replace($_SERVER['HTTP_HOST'], "", str_replace("https://", "", str_replace("http://", "", $image["url"]))));
 
 
 									if($retornoFeaturedImage == false){ 
