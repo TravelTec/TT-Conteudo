@@ -4435,17 +4435,28 @@ date_default_timezone_set('America/Sao_Paulo');
 
 
     $options = get_option( 'valueCheckGetContent' ); 
+
+	if ( wp_get_schedule( 'ttconteudo_import_content' ) !== 'daily' ) {
+	    // Above statement will also be true if NO schedule exists, so here we check and unschedule if required
+	    if ( $time = wp_next_schedule( 'ttconteudo_import_content' ) ) {
+		wp_unschedule_event( $time, 'ttconteudo_import_content' );
+	    }
+	    wp_schedule_event( strtotime('12:00:00'), 'daily', 'ttconteudo_import_content' );
+	}
  
 
     if (!wp_next_scheduled('ttconteudo_import_content')) { 
 
 
 
-            wp_schedule_event( strtotime('02:00:00'), 'daily', 'ttconteudo_import_content' ); 
+            wp_schedule_event( strtotime('12:00:00'), 'daily', 'ttconteudo_import_content' ); 
 
 
 
-        }
+        }else{
+	    wp_unschedule_event( strtotime('02:00:00'), 'ttconteudo_import_content' );
+	    wp_schedule_event( strtotime('12:00:00'), 'daily', 'ttconteudo_import_content' );
+    }
 
 
 
