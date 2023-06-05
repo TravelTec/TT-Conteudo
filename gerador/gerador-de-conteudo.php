@@ -962,6 +962,18 @@
 
 			}
 
+			function exists_file_dir($file_name, $folders){ 
+				$contador = 0;
+			    foreach($folders as $folder){
+			    	$url = $_SERVER['DOCUMENT_ROOT']."/wp-content/uploads/2023/".$folder."/".$file_name;
+			    	//echo $url;
+			        if(file_exists($url)){
+			        	$contador = 1;
+			        }
+			    }
+			    return $contador;
+			}
+
 
 
 
@@ -1413,24 +1425,24 @@
 								$post_id = $connSite->lastInsertId();  
 
 
-								$filepath = $setFeaturedImagePost[$count]; //Change this to the actual file path... 
+								$filepath = $setFeaturedImagePost[$count]; //Change this to the actual file path...  
 
-
-
-
-
-
-
-								if($filepath != "null" || $filepath != null){
-
-
-
-								    $image = rudr_upload_file_by_url( $filepath );
  
+							 	$folders[] = "01";
+								$folders[] = "02";
+								$folders[] = "03";
+								$folders[] = "04";
+								$folders[] = "05";
+								$folders[] = date("m");
+
+
+								if(exists_file_dir(basename($filepath), $folders) == 0){
+									$image = rudr_upload_file_by_url( $filepath );
+
 									$filename = date("Y/m").'/'.date("dMYHis").'.jpg'; //Change this to the actual file name...  
 								    $date = date("Y-m-d H:i:s"); 
 
-									$sqlFeaturedImage = $connSite->prepare("SELECT guid, ID FROM `".$table_prefix."posts` WHERE guid = '".$image["url"]."'"); 
+								    $sqlFeaturedImage = $connSite->prepare("SELECT guid, ID FROM `".$table_prefix."posts` WHERE guid = '".$image["url"]."'"); 
 								    $sqlFeaturedImage->execute();   
 
 									$retornoFeaturedImage = $sqlFeaturedImage->fetch(\PDO::FETCH_ASSOC);  
@@ -1453,6 +1465,33 @@
 										$featured_media_id = $retornoFeaturedImage["ID"]; 
 
 									} 
+								}else{
+
+								    $sqlFeaturedImage = $connSite->prepare("SELECT guid, ID FROM `".$table_prefix."posts` WHERE guid LIKE '%".basename($filepath)."%'"); 
+								    $sqlFeaturedImage->execute();   
+
+									$retornoFeaturedImage = $sqlFeaturedImage->fetch(\PDO::FETCH_ASSOC);  
+
+									$nameImageBD = str_replace("/wp-content/uploads/", "", str_replace($_SERVER['HTTP_HOST'], "", str_replace("https://", "", str_replace("http://", "", basename($filepath)))));
+
+
+									if($retornoFeaturedImage == false){ 
+
+									    $sqlInsertFeaturedImage = $connSite->prepare("INSERT INTO ".$table_prefix."posts (post_author, post_title, post_name, post_date, post_date_gmt, post_modified, post_modified_gmt, post_type, guid, post_status, post_mime_type, post_parent) VALUES (2, '".$postTitle."', '".$nameImageBD."', '".$date."', '".$date."', '".$date."', '".$date."', 'attachment', '".basename($filepath)."', 'inherit', 'jpg', '".$post_id."')");
+ 
+
+									    $sqlInsertFeaturedImage->execute();   
+
+										$featured_media_id = $connSite->lastInsertId(); 
+
+
+									}else{ 
+
+										$featured_media_id = $retornoFeaturedImage["ID"]; 
+
+									} 
+
+								}
 
 									$sqlInsertMetaFeaturedImage = $connSite->prepare("INSERT INTO ".$table_prefix."postmeta (meta_value, meta_key, post_id) VALUES ('".$featured_media_id."', '_thumbnail_id', '".$post_id."')");  
 								    $sqlInsertMetaFeaturedImage->execute(); 
@@ -1462,9 +1501,6 @@
 
 									$sqlInsertMeta3FeaturedImage = $connSite->prepare("INSERT INTO ".$table_prefix."postmeta (meta_value, meta_key, post_id) VALUES ('".$nameImageBD."', '_wp_attached_file', '".$featured_media_id."')"); 
 								    $sqlInsertMeta3FeaturedImage->execute(); 
-
-
-								}
 
 
 
@@ -1652,10 +1688,9 @@
 
 
 								}    
+ 
 
-
-
-
+ 
 
 
 
