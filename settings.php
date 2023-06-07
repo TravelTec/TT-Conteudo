@@ -296,7 +296,7 @@
 
 
 
-	add_action( 'wp_enqueue_scripts', 'enqueue_scripts_site_w4travel' );   
+	//add_action( 'wp_enqueue_scripts', 'enqueue_scripts_site_w4travel' );   
 
 
 
