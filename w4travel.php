@@ -34,7 +34,7 @@
 
 
 
-	Version: 2.3.4
+	Version: 2.3.5
 
 
 
@@ -62,7 +62,7 @@
 
 
 
-	require dirname(__FILE__).'/cotacao/formulario-de-cotacao.php';
+	//require dirname(__FILE__).'/cotacao/formulario-de-cotacao.php';
 
 
 
