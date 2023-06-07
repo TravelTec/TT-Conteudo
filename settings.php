@@ -256,35 +256,7 @@
 
 
 
-        ); 
-
-
-
-
-
-
-
-        wp_enqueue_script( 
-
-
-
-            'w4travel_cotacao',
-
-
-
-            plugin_dir_url( __FILE__ ) . 'assets/js/w4travel_cotacao.js?v='.date("dmYHis"),
-
-
-
-            array( 'jquery' )
-
-
-
-        ); 
-
-
-
-
+        );  
 
 
 
