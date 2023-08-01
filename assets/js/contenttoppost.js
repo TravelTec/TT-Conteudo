@@ -19,7 +19,19 @@ function getDataTopPosts(){
 		    	});
 
 		    	var html = ""; 
+			   var htmlBanner = ""; 
 			    var contador = 0;  
+				
+				htmlBanner += '<div id="carouselExampleCaptions" class="carousel slide carousel-fade" data-bs-ride="carousel">';
+					htmlBanner += '<div class="carousel-indicators">';
+						jQuery(filteredResults).each(function(i, item) {
+							if(i < 6){
+								htmlBanner += '<button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="'+i+'" '+(i == 0 ? 'class="active" aria-current="true"' : '')+' aria-label="'+item.title.rendered+'"></button>';
+							}
+						});
+					htmlBanner += '</div>';
+
+					htmlBanner += '<div class="carousel-inner">';  
 
 			 	jQuery(filteredResults).each(function(i, item) { 
 			    	if(i < 6){
@@ -45,10 +57,22 @@ function getDataTopPosts(){
 			  					html += '</div>';
 							html += '</div>';
 						html += '</div>';
+						
+						 
+								htmlBanner += '<div class="carousel-item '+(i == 0 ? 'active' : '')+'" style="background-color:#000">';
+									htmlBanner += '<div class="carousel-caption d-none d-md-block">';
+										htmlBanner += '<a href="https://redeturistica.com.br/'+item.slug+'/" style="color:#fff;text-decoration:none"><h5 style="line-height: 1.5;font-weight:600">'+item.title.rendered+'</h5></a>'; 
+									htmlBanner += '</div>';
+									htmlBanner += '<a href="https://redeturistica.com.br/'+item.slug+'/"><img src="'+img+'" class="imgBanner d-block w-100" alt="..." style=";opacity:0.4"></a>';
+								htmlBanner += '</div>';
 			    	}
 			 	});
+				
+					htmlBanner += '</div>'; 
+				htmlBanner += '</div>';
 
 			 	jQuery("#resultContentTopPost").html(html); 
+			 	jQuery("#bannerConteudo").html(htmlBanner); 
 			 	jQuery(".buttonAllPosts").attr("style", "margin: 30px 0px;font-family: \'Montserrat\';");
 		    }
 	   	}
