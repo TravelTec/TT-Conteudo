@@ -3381,7 +3381,9 @@
 	  				<p style="font-size:17px;line-height: 1.8;margin-top: 20px;"> Para visualizar todo o conteúdo que é gerado, <a href="/conteudo-turistico">clique aqui</a> ou copie o shortcode <span class="text-line">[TTCONTEUDO_POSTS]</span> <button onclick="copyConteudo('[TTCONTEUDO_POSTS]','#copy_button_conteudo')" id="copy_button_conteudo" class="btn btn-sm btn-primary copy-button" data-toggle="tolltip" data-placement="top" tilte="Copiar shortcode">Copiar</button> na página que desejar. </p>
 
 	  				<p style="font-size:17px;line-height: 1.8;margin-top: 20px;"> Para adicionar os primeiros resultados em uma página, copie o shortcode <span class="text-line">[TTCONTEUDO_LIST_TOP_POSTS]</span> <button onclick="copyConteudo('[TTCONTEUDO_LIST_TOP_POSTS]','#copy_button_conteudo_all')" id="copy_button_conteudo_all" class="btn btn-sm btn-primary copy-button" data-toggle="tolltip" data-placement="top" tilte="Copiar shortcode">Copiar</button> na página que desejar. </p>
-
+ 
+	  				<p style="font-size:17px;line-height: 1.8;margin-top: 20px;"> Para adicionar um banner chamativo no seu site, copie o shortcode <span class="text-line">[TTCONTEUDO_BANNER]</span> <button onclick="copyConteudo('[TTCONTEUDO_BANNER]','#copy_button_conteudo_banner')" id="copy_button_conteudo_banner" class="btn btn-sm btn-primary copy-button" data-toggle="tolltip" data-placement="top" tilte="Copiar shortcode">Copiar</button> na página que desejar. </p>
+					
 	  				<?php   
 						$week = date("W");
 	  				?>
@@ -3549,7 +3551,8 @@
 				jQuery("[data-toggle='tooltip']").tooltip();
 
 				jQuery("#copy_button_conteudo").attr('title', 'Copiar shortcode').tooltip('_fixTitle');
-				jQuery("#copy_button_conteudo_all").attr('title', 'Copiar shortcode').tooltip('_fixTitle');
+				jQuery("#copy_button_conteudo_all").attr('title', 'Copiar shortcode').tooltip('_fixTitle'); 
+				jQuery("#copy_button_conteudo_banner").attr('title', 'Copiar shortcode').tooltip('_fixTitle');
 			});
 
 			function copyConteudo(text, target) {
