@@ -4210,6 +4210,118 @@
 
 	} 
 
+	add_shortcode('TTCONTEUDO_BANNER', 'shortcode_banner');
+	function shortcode_banner(){
+		$retorno = "";
+
+		$retorno .= '<link rel="preconnect" href="https://fonts.googleapis.com"> 
+			<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+			<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+			<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+			<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css?ver=1.0">';
+		
+		$retorno .= '<style>
+			@media(min-width: 767px){
+				.imgBanner{
+					height: 550px !important;
+				}
+				.carousel-caption{
+					bottom: 30% !important;
+				}
+				.carousel-caption h5{
+					font-size: 60px !important;
+				}
+			}
+			@media(max-width: 766px){
+				.carousel-caption{
+					display: block !important;
+				}
+				.carousel-caption h5{
+					font-size: 20px !important;
+				}
+			}
+		</style>';
+
+		$options = [];
+		if(get_option( 'valueInfoLuxo' ) == 105){
+			$options[] = 105;
+		}
+		if(get_option( 'valueInfoSolePraia' ) == 109){
+			$options[] = 109;
+		}
+		if(get_option( 'valueInfoCharme' ) == 113){
+			$options[] = 113;
+		}
+		if(get_option( 'valueInfoLua' ) == 114){
+			$options[] = 114;
+		}
+		if(get_option( 'valueInfoCompras' ) == 115){
+			$options[] = 115;
+		}
+		if(get_option( 'valueInfoCruzeiros' ) == 116){
+			$options[] = 116;
+		}
+		if(get_option( 'valueInfoGastronomico' ) == 104){
+			$options[] = 104;
+		}
+		if(get_option( 'valueInfoAventura' ) == 96){
+			$options[] = 96;
+		}
+		if(get_option( 'valueInfoCultural' ) == 98){
+			$options[] = 98;
+		}
+		if(get_option( 'valueInfoDiversidade' ) == 99){
+			$options[] = 99;
+		}
+		if(get_option( 'valueInfoEventos' ) == 103){
+			$options[] = 103;
+		}
+		if(get_option( 'valueInfoEstudos' ) == 102){
+			$options[] = 102;
+		}
+		if(get_option( 'valueInfoEsportivo' ) == 101){
+			$options[] = 101;
+		}
+		if(get_option( 'valueInfoEcoturismo' ) == 100){
+			$options[] = 100;
+		}
+		if(get_option( 'valueInfoNautico' ) == 106){
+			$options[] = 106;
+		}
+		if(get_option( 'valueInfoReligioso' ) == 107){
+			$options[] = 107;
+		}
+		if(get_option( 'valueInfoAgroturismo' ) == 95){
+			$options[] = 95;
+		}
+		if(get_option( 'valueInfoSaude' ) == 108){
+			$options[] = 108;
+		}
+		if(get_option( 'valueNoticias' ) == 91){
+			$options[] = 91;
+		}
+		if(get_option( 'valueInfo' ) == 89){
+			$options[] = 89;
+		}  
+		
+		$retorno .= '<div id="bannerConteudo"></div>
+		
+		<input type="hidden" id="pluginDirURL" value="'.plugin_dir_url( __FILE__ ).'"> 
+		<input type="hidden" id="optionCategories" value="'.json_encode($options).'">';
+
+		$retorno .= '<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" crossorigin="anonymous"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" crossorigin="anonymous"></script> 
+			<script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
+			<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment-with-locales.min.js"></script> 
+			<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+			<script type="text/javascript" src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+			<script src="'.plugin_dir_url( __FILE__ ) . 'assets/js/helpers.js?v='.date("dmYHis").'" crossorigin="anonymous"></script>
+			<script src="'.plugin_dir_url( __FILE__ ) . 'assets/js/contenttoppost.js?v='.date("dmYHis").'" crossorigin="anonymous"></script>';
+
+		return $retorno;  
+	}
+
     add_shortcode('TTCONTEUDO_POST_CONTENT', 'shortcode_post_content');  
 	function shortcode_post_content(){
 		$retorno = "";
