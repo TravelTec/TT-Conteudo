@@ -79,7 +79,7 @@ jQuery(function() {
 
 function getDataAllContent(){
 	jQuery.ajax({ 
-	    url : 'https://redeturistica.com.br/wp-json/wp/v2/posts?per_page=100&page=1&orderby=date&order=desc&_embed', 
+	    url : 'https://blog.traveltec.com.br/wp-json/wp/v2/posts?per_page=100&page=1&orderby=date&order=desc&_embed', 
 	    type : 'get', 
 	    success : function( resposta ) {    
 
@@ -104,7 +104,7 @@ function getDataAllContent(){
 
 function getDataInitialContent(){
 	jQuery.ajax({ 
-	    url : 'https://redeturistica.com.br/wp-json/wp/v2/posts?per_page=18&page=1&orderby=date&order=desc&_embed', 
+	    url : 'https://blog.traveltec.com.br/wp-json/wp/v2/posts?per_page=18&page=1&orderby=date&order=desc&_embed', 
 	    type : 'get', 
 	    success : function( resposta ) {     
 
@@ -388,7 +388,7 @@ function showPostContent(){
     		}); 
 
     		var excerpt = item.excerpt.rendered; 
-    		excerpt = excerpt.replace('<a href="https://redeturistica.com.br/'+slug+'/" class="" rel="bookmark">Continue a ler &raquo;<span class="screen-reader-text">'+item.title.rendered+'</span></a>', ''); 
+    		excerpt = excerpt.replace('<a href="https://blog.traveltec.com.br/'+slug+'/" class="" rel="bookmark">Continue a ler &raquo;<span class="screen-reader-text">'+item.title.rendered+'</span></a>', ''); 
 			jQuery("#imgPostContent").attr('src', img);
 			jQuery("#titlePostContent").html(item.title.rendered);
 			jQuery("#titlePostContentForm").val(item.title.rendered); 
@@ -432,9 +432,9 @@ function lisTop3Posts(){
 		    		}); 
 
 					retorno += '<div class="carousel-item '+(i == 0 ? 'active' : '')+'" style="background-color:#000">';
-						retorno += '<a href="https://redeturistica.com.br/'+item.slug+'/"><img src="'+img+'" class="d-block w-100" alt="..." style="height:300px;opacity:0.4"></a>';
+						retorno += '<a href="/'+item.slug+'/"><img src="'+img+'" class="d-block w-100" alt="..." style="height:300px;opacity:0.4"></a>';
 						retorno += '<div class="carousel-caption d-none d-md-block">';
-							retorno += '<a href="https://redeturistica.com.br/'+item.slug+'/" style="color:#fff;text-decoration:none"><h5 style="font-size: 15px;line-height: 1.5;font-weight:600">'+item.title.rendered+'</h5></a>'; 
+							retorno += '<a href="/'+item.slug+'/" style="color:#fff;text-decoration:none"><h5 style="font-size: 15px;line-height: 1.5;font-weight:600">'+item.title.rendered+'</h5></a>'; 
 						retorno += '</div>';
 					retorno += '</div>';
 				}
