@@ -79,7 +79,7 @@ jQuery(function() {
 
 function getDataAllContent(){
 	jQuery.ajax({ 
-	    url : 'https://blog.traveltec.com.br/wp-json/wp/v2/posts?per_page=100&page=1&orderby=date&order=desc&_embed', 
+	    url : 'https://redeturistica.com.br/wp-json/wp/v2/posts?per_page=100&page=1&orderby=date&order=desc&_embed', 
 	    type : 'get', 
 	    success : function( resposta ) {    
 
@@ -104,7 +104,7 @@ function getDataAllContent(){
 
 function getDataInitialContent(){
 	jQuery.ajax({ 
-	    url : 'https://blog.traveltec.com.br/wp-json/wp/v2/posts?per_page=18&page=1&orderby=date&order=desc&_embed', 
+	    url : 'https://redeturistica.com.br/wp-json/wp/v2/posts?per_page=18&page=1&orderby=date&order=desc&_embed', 
 	    type : 'get', 
 	    success : function( resposta ) {     
 
