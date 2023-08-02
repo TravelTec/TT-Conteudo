@@ -4,7 +4,7 @@ jQuery(function() {
 
 function getDataTopPosts(){
 	jQuery.ajax({ 
-	    url : 'https://blog.traveltec.com.br/wp-json/wp/v2/posts?per_page=12&page=1&orderby=date&order=desc&_embed', 
+	    url : 'https://redeturistica.com.br/wp-json/wp/v2/posts?per_page=12&page=1&orderby=date&order=desc&_embed', 
 	    type : 'get', 
 	    success : function( resposta ) {     
 
