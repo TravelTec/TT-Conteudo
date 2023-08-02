@@ -61,9 +61,9 @@ function getDataTopPosts(){
 						 
 								htmlBanner += '<div class="carousel-item '+(i == 0 ? 'active' : '')+'" style="background-color:#000">';
 									htmlBanner += '<div class="carousel-caption d-none d-md-block">';
-										htmlBanner += '<a href="https://redeturistica.com.br/'+item.slug+'/" style="color:#fff;text-decoration:none"><h5 style="line-height: 1.5;font-weight:600">'+item.title.rendered+'</h5></a>'; 
+										htmlBanner += '<a href="/'+item.slug+'/" style="color:#fff;text-decoration:none"><h5 style="line-height: 1.5;font-weight:600">'+item.title.rendered+'</h5></a>'; 
 									htmlBanner += '</div>';
-									htmlBanner += '<a href="https://redeturistica.com.br/'+item.slug+'/"><img src="'+img+'" class="imgBanner d-block w-100" alt="..." style=";opacity:0.4"></a>';
+									htmlBanner += '<a href="/'+item.slug+'/"><img src="'+img+'" class="imgBanner d-block w-100" alt="..." style=";opacity:0.4"></a>';
 								htmlBanner += '</div>';
 			    	}
 			 	});
